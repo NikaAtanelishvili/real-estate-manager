@@ -1,9 +1,12 @@
 import { HeaderLayout } from '@/layouts'
+import { Filter } from './components'
 
 const Listing: React.FC = () => {
   return (
     <HeaderLayout>
-      <div></div>
+      <section>
+        <Filter />
+      </section>
     </HeaderLayout>
   )
 }
