@@ -1,5 +1,11 @@
+import { HeaderLayout } from '@/layouts'
+
 const Listing: React.FC = () => {
-  return <div></div>
+  return (
+    <HeaderLayout>
+      <div></div>
+    </HeaderLayout>
+  )
 }
 
 export default Listing
