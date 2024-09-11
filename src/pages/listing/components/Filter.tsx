@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Region from './Region'
 import Price from './Price'
 import Area from './Area'
 import Bedrooms from './Bedrooms'
+import { SelectedItem } from '@/components'
 
 const dummyRegions = [
   { id: 1, name: 'New York' },
@@ -25,6 +26,18 @@ const dummyRegions = [
 const dummyBedrooms = [1, 2, 3, 4]
 
 const Filter: React.FC = () => {
+  // State to track selected filters
+  const [selectedRegions, setSelectedRegions] = useState<number[]>([])
+  const [selectedPrice, setSelectedPrice] = useState<{
+    min: number
+    max: number
+  }>({ min: 0, max: Infinity })
+  const [selectedArea, setSelectedArea] = useState<{
+    min: number
+    max: number
+  }>({ min: 0, max: Infinity })
+  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
+
   // ONLY ONE DROPDOWN IS OPEN AT A TIME
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
@@ -32,26 +45,124 @@ const Filter: React.FC = () => {
     setOpenDropdown(prev => (prev === dropdown ? null : dropdown))
   }
 
+  const handleRegionSelection = useCallback((regions: number[]) => {
+    setSelectedRegions(regions)
+  }, [])
+
+  const handlePriceSelection = useCallback((min: number, max: number) => {
+    setSelectedPrice({ min, max })
+  }, [])
+
+  const handleAreaSelection = useCallback((min: number, max: number) => {
+    setSelectedArea({ min, max })
+  }, [])
+
+  const handleBedroomsSelection = useCallback((bedrooms: number[]) => {
+    setSelectedBedrooms(bedrooms)
+  }, [])
+
+  const removeSelectedItem = (type: string, value: number | null) => {
+    switch (type) {
+      case 'removeFilters':
+        setSelectedRegions([])
+        setSelectedPrice({ min: 0, max: Infinity })
+        setSelectedArea({ min: 0, max: Infinity })
+        setSelectedBedrooms([])
+        break
+      case 'region':
+        setSelectedRegions(selectedRegions.filter(region => region !== value))
+        break
+      case 'price':
+        setSelectedPrice({ min: 0, max: Infinity })
+        break
+      case 'area':
+        setSelectedArea({ min: 0, max: Infinity })
+        break
+      case 'bedrooms':
+        setSelectedBedrooms(
+          selectedBedrooms.filter(bedroom => bedroom !== value),
+        )
+        break
+      default:
+        break
+    }
+  }
+
   return (
-    <div className="relative inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
-      <Region
-        regions={dummyRegions}
-        isOpen={openDropdown === 'region'}
-        toggleDropdown={() => toggleDropdown('region')}
-      />
-      <Price
-        isOpen={openDropdown === 'price'}
-        toggleDropdown={() => toggleDropdown('price')}
-      />
-      <Area
-        isOpen={openDropdown === 'area'}
-        toggleDropdown={() => toggleDropdown('area')}
-      />
-      <Bedrooms
-        isOpen={openDropdown === 'bedrooms'}
-        toggleDropdown={() => toggleDropdown('bedrooms')}
-        bedrooms={dummyBedrooms}
-      />
+    <div className="inline-flex flex-col gap-4">
+      <div className="relative inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
+        <Region
+          regions={dummyRegions}
+          isOpen={openDropdown === 'region'}
+          toggleDropdown={() => toggleDropdown('region')}
+          onSelectionChange={handleRegionSelection}
+          selectedRegions={selectedRegions}
+        />
+        <Price
+          isOpen={openDropdown === 'price'}
+          toggleDropdown={() => toggleDropdown('price')}
+          onSelectionChange={handlePriceSelection}
+          selectedPrice={selectedPrice}
+        />
+        <Area
+          isOpen={openDropdown === 'area'}
+          toggleDropdown={() => toggleDropdown('area')}
+          onSelectionChange={handleAreaSelection}
+          selectedArea={selectedArea}
+        />
+        <Bedrooms
+          isOpen={openDropdown === 'bedrooms'}
+          toggleDropdown={() => toggleDropdown('bedrooms')}
+          bedrooms={dummyBedrooms}
+          onSelectionChange={handleBedroomsSelection}
+          selectedBedrooms={selectedBedrooms}
+        />
+      </div>
+
+      {/* Display Selected Filters */}
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Display selected regions */}
+        {selectedRegions.map(region => (
+          <SelectedItem
+            key={region}
+            label={region}
+            onRemove={() => removeSelectedItem('region', region)}
+          />
+        ))}
+
+        {/* Display selected price */}
+        {selectedPrice.min !== 0 && selectedPrice.max !== Infinity && (
+          <SelectedItem
+            label={`${selectedPrice.min} ₾ - ${selectedPrice.max} ₾`}
+            onRemove={() => removeSelectedItem('price', null)}
+          />
+        )}
+
+        {/* Display selected area */}
+        {selectedArea.min !== 0 && selectedArea.max !== Infinity && (
+          <SelectedItem
+            label={`${selectedArea.min} მ - ${selectedArea.max} მ`}
+            onRemove={() => removeSelectedItem('area', null)}
+          />
+        )}
+
+        {/* Display selected bedrooms */}
+        {selectedBedrooms.map(bedroom => (
+          <SelectedItem
+            key={bedroom}
+            label={bedroom}
+            onRemove={() => removeSelectedItem('bedrooms', bedroom)}
+          />
+        ))}
+        <div
+          className="cursor-pointer"
+          onClick={() => removeSelectedItem('removeFilters', null)}
+        >
+          <p className="text-sm font-medium leading-4 text-[#021526]">
+            გასუფთავება
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
