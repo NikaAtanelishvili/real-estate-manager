@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Region from './Region'
 import Price from './Price'
 import Area from './Area'
+import Bedrooms from './Bedrooms'
 
 const dummyRegions = [
   { id: 1, name: 'New York' },
@@ -20,6 +21,8 @@ const dummyRegions = [
   { id: 14, name: 'Columbus' },
   { id: 15, name: 'Charlotte' },
 ]
+
+const dummyBedrooms = [1, 2, 3, 4]
 
 const Filter: React.FC = () => {
   // ONLY ONE DROPDOWN IS OPEN AT A TIME
@@ -44,7 +47,11 @@ const Filter: React.FC = () => {
         isOpen={openDropdown === 'area'}
         toggleDropdown={() => toggleDropdown('area')}
       />
-      {/* <BedroomsCount /> */}
+      <Bedrooms
+        isOpen={openDropdown === 'bedrooms'}
+        toggleDropdown={() => toggleDropdown('bedrooms')}
+        bedrooms={dummyBedrooms}
+      />
     </div>
   )
 }
