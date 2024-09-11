@@ -1,5 +1,6 @@
 import { CloseSvg, OpenSvg } from '@/assets'
-import { FormikValues, useFormik } from 'formik'
+import { RangeInput } from '@/components'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 interface PriceType {
@@ -37,6 +38,14 @@ const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
   ) => {
     formik.setFieldValue(field, value)
   }
+
+  const error =
+    formik.values.minPrice &&
+    formik.values.maxPrice &&
+    (formik.errors.minPrice || formik.errors.maxPrice)
+      ? true
+      : false
+
   return (
     <div>
       <button
@@ -58,13 +67,20 @@ const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
           <form className="flex flex-col gap-6" onSubmit={formik.handleSubmit}>
             <div className="flex flex-col gap-2">
               <div className="flex justify-between gap-3">
-                <PriceInput id={'minPrice'} formik={formik} />
-
-                <PriceInput id={'maxPrice'} formik={formik} />
+                <RangeInput
+                  id={'minPrice'}
+                  formik={formik}
+                  error={error}
+                  rangeType={'price'}
+                />
+                <RangeInput
+                  id={'maxPrice'}
+                  formik={formik}
+                  error={error}
+                  rangeType={'price'}
+                />
               </div>
-              {formik.values.minPrice &&
-              formik.values.maxPrice &&
-              (formik.errors.minPrice || formik.errors.maxPrice) ? (
+              {error ? (
                 <p className="text-xs leading-3 text-[#F93B1D]">
                   ჩაწერეთ ვალიდური მონაცემები
                 </p>
@@ -124,37 +140,6 @@ const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
           </form>
         </div>
       )}
-    </div>
-  )
-}
-
-/////////////////////////////////////////////////////////////////
-
-interface PriceInputProps {
-  id: string
-  formik: FormikValues
-}
-
-const PriceInput: React.FC<PriceInputProps> = props => {
-  return (
-    <div className="relative flex items-center">
-      <input
-        className={`max-w-40 rounded-md border border-[#808A93] p-3 text-sm leading-4 text-[#021526] outline-none ${
-          props.formik.values.minPrice &&
-          props.formik.values.maxPrice &&
-          (props.formik.errors.minPrice || props.formik.errors.maxPrice)
-            ? 'border-[#F93B1D]'
-            : ''
-        }`}
-        type="number"
-        name={props.id}
-        placeholder="დან"
-        id={props.id}
-        {...props.formik.getFieldProps(props.id)}
-      />
-      <span className="absolute right-3 text-sm leading-3 text-[#2D3648]">
-        ₾
-      </span>
     </div>
   )
 }

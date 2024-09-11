@@ -77,9 +77,7 @@ const Area: React.FC<AreaType> = ({ isOpen, toggleDropdown }) => {
                   rangeType={'area'}
                 />
               </div>
-              {formik.values.minArea &&
-              formik.values.maxArea &&
-              (formik.errors.minArea || formik.errors.maxArea) ? (
+              {error ? (
                 <p className="text-xs leading-3 text-[#F93B1D]">
                   ჩაწერეთ ვალიდური მონაცემები
                 </p>
