@@ -1,35 +1,48 @@
 import { CloseSvg, OpenSvg } from '@/assets'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface BedroomsType {
   isOpen: boolean
   toggleDropdown: () => void
   bedrooms: number[]
+  onSelectionChange: (bedrooms: number[]) => void
+  selectedBedrooms: number[]
 }
 
 const Bedrooms: React.FC<BedroomsType> = ({
   isOpen,
   toggleDropdown,
   bedrooms,
+  onSelectionChange,
+  selectedBedrooms: parentSelectedBedrooms,
 }) => {
   const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
 
+  // Sync local selectedBedrooms state with the parent-selectedBedrooms state (THIS IS HELL)
+  useEffect(() => {
+    setSelectedBedrooms(parentSelectedBedrooms)
+  }, [parentSelectedBedrooms])
+
   const handleCheckboxChange = useCallback(
     (count: number) => {
+      let updatedBedrooms
       if (selectedBedrooms.includes(count)) {
-        setSelectedBedrooms(
-          selectedBedrooms.filter(bedroomCount => bedroomCount !== count),
+        updatedBedrooms = selectedBedrooms.filter(
+          bedroomCount => bedroomCount !== count,
         )
       } else {
-        setSelectedBedrooms([...selectedBedrooms, count])
+        updatedBedrooms = [...selectedBedrooms, count]
       }
+
+      setSelectedBedrooms(updatedBedrooms)
+      onSelectionChange(updatedBedrooms)
     },
-    [selectedBedrooms],
+    [onSelectionChange, selectedBedrooms],
   )
 
   const applySelection = () => {
-    toggleDropdown() // Close dropdown after applying
-    // WORK IN PROGRESS (HANDLING FILTER)
+    onSelectionChange(selectedBedrooms)
+    toggleDropdown()
     console.log('არჩეული საძინებლების რაოდენობა:', selectedBedrooms)
   }
 

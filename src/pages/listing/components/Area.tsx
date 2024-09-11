@@ -1,16 +1,24 @@
 import { CloseSvg, OpenSvg } from '@/assets'
 import { RangeInput } from '@/components'
 import { useFormik } from 'formik'
+import { useEffect } from 'react'
 import * as Yup from 'yup'
 
 interface AreaType {
   isOpen: boolean
   toggleDropdown: () => void
+  onSelectionChange: (min: number, max: number) => void
+  selectedArea: { min: number; max: number }
 }
 
 const areaShortcuts = [10, 20, 30, 40, 50]
 
-const Area: React.FC<AreaType> = ({ isOpen, toggleDropdown }) => {
+const Area: React.FC<AreaType> = ({
+  isOpen,
+  toggleDropdown,
+  onSelectionChange,
+  selectedArea,
+}) => {
   const formik = useFormik({
     initialValues: {
       minArea: '',
@@ -25,9 +33,7 @@ const Area: React.FC<AreaType> = ({ isOpen, toggleDropdown }) => {
         .min(Yup.ref('minArea'), 'ჩაწერეთ ვალიდური მონაცემები'),
     }),
     onSubmit: values => {
-      // WORK IN PROGRESS (HANDLING FILTER)
-      console.log('მინიმალური ფართობი:', values.minArea)
-      console.log('მაქსიმალური ფართობიი', values.maxArea)
+      onSelectionChange(Number(values.minArea), Number(values.maxArea))
       toggleDropdown() // Close the dropdown after applying
     },
   })
@@ -35,6 +41,13 @@ const Area: React.FC<AreaType> = ({ isOpen, toggleDropdown }) => {
   const handleShortcutClick = (value: number, field: 'minArea' | 'maxArea') => {
     formik.setFieldValue(field, value)
   }
+
+  // Sync local Formik values with parent-selected values (minArea, maxArea)
+  useEffect(() => {
+    formik.setFieldValue('minArea', selectedArea.min || '')
+    formik.setFieldValue('maxArea', selectedArea.max || '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedArea])
 
   const error =
     formik.values.minArea &&

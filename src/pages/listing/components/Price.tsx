@@ -1,16 +1,24 @@
 import { CloseSvg, OpenSvg } from '@/assets'
 import { RangeInput } from '@/components'
 import { useFormik } from 'formik'
+import { useEffect } from 'react'
 import * as Yup from 'yup'
 
 interface PriceType {
   isOpen: boolean
   toggleDropdown: () => void
+  onSelectionChange: (min: number, max: number) => void
+  selectedPrice: { min: number; max: number }
 }
 
 const priceShortcuts = [50, 100, 150, 200, 250, 300]
 
-const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
+const Price: React.FC<PriceType> = ({
+  isOpen,
+  toggleDropdown,
+  onSelectionChange,
+  selectedPrice,
+}) => {
   const formik = useFormik({
     initialValues: {
       minPrice: '',
@@ -25,9 +33,7 @@ const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
         .min(Yup.ref('minPrice'), 'ჩაწერეთ ვალიდური მონაცემები'),
     }),
     onSubmit: values => {
-      // WORK IN PROGRESS (HANDLING FILTER)
-      console.log('მინიმალური ფასი:', values.minPrice)
-      console.log('მაქსიმალური ფასი', values.maxPrice)
+      onSelectionChange(Number(values.minPrice), Number(values.maxPrice))
       toggleDropdown() // Close the dropdown after applying
     },
   })
@@ -38,6 +44,13 @@ const Price: React.FC<PriceType> = ({ isOpen, toggleDropdown }) => {
   ) => {
     formik.setFieldValue(field, value)
   }
+
+  // Sync local Formik values with parent-selected values (minPrice, maxPrice)
+  useEffect(() => {
+    formik.setFieldValue('minPrice', selectedPrice.min || '')
+    formik.setFieldValue('maxPrice', selectedPrice.max || '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPrice])
 
   const error =
     formik.values.minPrice &&

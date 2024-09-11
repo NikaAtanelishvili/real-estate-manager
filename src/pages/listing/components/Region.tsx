@@ -1,30 +1,45 @@
 import { CloseSvg, OpenSvg } from '@/assets'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface RegionType {
   regions: { id: number; name: string }[]
   isOpen: boolean
   toggleDropdown: () => void
+  onSelectionChange: (selectedRegions: number[]) => void
+  selectedRegions: number[]
 }
 
-const Region: React.FC<RegionType> = ({ regions, isOpen, toggleDropdown }) => {
+const Region: React.FC<RegionType> = ({
+  regions,
+  isOpen,
+  toggleDropdown,
+  onSelectionChange,
+  selectedRegions: parentSelectedRegions,
+}) => {
   const [selectedRegions, setSelectedRegions] = useState<number[]>([])
+
+  // Sync local selectedRegions state with the parent-selectedRegions state (THIS IS HELL)
+  useEffect(() => {
+    setSelectedRegions(parentSelectedRegions)
+  }, [parentSelectedRegions])
 
   const handleCheckboxChange = useCallback(
     (id: number) => {
+      let updatedRegions
       if (selectedRegions.includes(id)) {
-        setSelectedRegions(selectedRegions.filter(regionId => regionId !== id))
+        updatedRegions = selectedRegions.filter(regionId => regionId !== id)
       } else {
-        setSelectedRegions([...selectedRegions, id])
+        updatedRegions = [...selectedRegions, id]
       }
+      setSelectedRegions(updatedRegions) // Update the local state
+      onSelectionChange(updatedRegions) // Notify parent of the updated selection
     },
-    [selectedRegions],
+    [selectedRegions, onSelectionChange],
   )
 
   const applySelection = () => {
     toggleDropdown() // Close dropdown after applying
-    // WORK IN PROGRESS (HANDLING FILTER)
-    console.log('არჩეული რეგიონების ID:', selectedRegions)
+    onSelectionChange(selectedRegions)
   }
 
   return (
