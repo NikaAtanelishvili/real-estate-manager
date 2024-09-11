@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Region from './Region'
+import Price from './Price'
 
 const dummyRegions = [
   { id: 1, name: 'New York' },
@@ -34,12 +35,10 @@ const Filter: React.FC = () => {
         isOpen={openDropdown === 'region'}
         toggleDropdown={() => toggleDropdown('region')}
       />
-      <Region
-        regions={dummyRegions}
-        isOpen={openDropdown === 'region2'}
-        toggleDropdown={() => toggleDropdown('region2')}
+      <Price
+        isOpen={openDropdown === 'price'}
+        toggleDropdown={() => toggleDropdown('price')}
       />
-      {/* <Price /> */}
       {/* <Area /> */}
       {/* <BedroomsCount /> */}
     </div>
