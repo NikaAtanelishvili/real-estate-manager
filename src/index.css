@@ -11,7 +11,7 @@ body {
 
 @font-face {
   font-family: Helvetica;
-  src: url('../public/fonts/HelveticaNeue.ttc');
+  src: url('../fonts/HelveticaNeue.ttc');
 }
 
 .custom-checkbox {
