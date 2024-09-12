@@ -1,12 +1,18 @@
 import { HeaderLayout } from '@/layouts'
-import { Filter } from './components'
+import { Filter, ListingGrid } from './components'
+import dummyListing from './dummyListing'
 
 const Listing: React.FC = () => {
   return (
     <HeaderLayout>
-      <section>
-        <Filter />
-      </section>
+      <div className="px-40">
+        <section>
+          <Filter />
+        </section>
+        <section>
+          <ListingGrid listrings={dummyListing} />
+        </section>
+      </div>
     </HeaderLayout>
   )
 }
