@@ -5,6 +5,7 @@ export default {
     extend: {
       fontFamily: {
         FiraGO: ['FiraGO', 'sans-serif'], // add your custom font
+        Helvetica: ['Helvetica', 'system-ui', 'sans-serif'],
       },
     },
   },

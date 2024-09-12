@@ -4,10 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
+body {
   @apply font-FiraGO;
   background-color: #fff;
-} */
+}
+
+@font-face {
+  font-family: Helvetica;
+  src: url('../public/fonts/HelveticaNeue.ttc');
+}
 
 .custom-checkbox {
   /* Hide default checkbox */
