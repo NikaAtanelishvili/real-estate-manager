@@ -1,9 +1,15 @@
 import { AreaSvg, BedSvg, LocationSvg, ZipCodeSvg } from '@/assets'
 import { CardProps } from '@/types'
+import { useNavigate } from 'react-router-dom'
 
 const Card: React.FC<CardProps> = props => {
+  const navigate = useNavigate()
+
   return (
-    <div className="flex cursor-pointer flex-col">
+    <div
+      className="flex cursor-pointer flex-col"
+      onClick={() => navigate(`/${props.id}`)}
+    >
       <div
         className="relative overflow-hidden"
         style={{ aspectRatio: '384 / 307' }}

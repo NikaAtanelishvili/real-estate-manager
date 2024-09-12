@@ -8,10 +8,13 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
-import { Listing } from '@/pages'
+import { Listing, ListingDetails } from '@/pages'
 
 const router = createBrowserRouter(
-  createRoutesFromElements([<Route path="/" element={<Listing />} />]),
+  createRoutesFromElements([
+    <Route path="/" element={<Listing />} />,
+    <Route path="/:id" element={<ListingDetails />} />,
+  ]),
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

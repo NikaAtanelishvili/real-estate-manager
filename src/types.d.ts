@@ -18,3 +18,17 @@ export interface CardProps {
     }
   }
 }
+
+export interface ListingDetailsType extends CardProps {
+  created_at: string
+  agent_id: number
+  description: string
+  agent: {
+    id: number
+    name: string
+    surname: string
+    email: string
+    phone: string
+    avatar: string
+  }
+}
