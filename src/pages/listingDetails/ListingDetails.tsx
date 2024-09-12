@@ -7,10 +7,13 @@ import {
   PhoneSvg,
   ZipCodeSvg,
 } from '@/assets'
+import { Card } from '@/components'
 import { useFetchListingDetails } from '@/hooks'
 import { HeaderLayout } from '@/layouts'
 import { ListingDetailsType } from '@/types'
 import { useNavigate, useParams } from 'react-router-dom'
+import dummyListing from '../listing/dummyListing'
+import { ListingsCarousel } from './components'
 
 const DUMMY_LISTING_DETAILS: ListingDetailsType = {
   id: 1,
@@ -65,134 +68,144 @@ const ListingDetails: React.FC = () => {
 
   return (
     <HeaderLayout>
-      <section>
-        {/* back button */}
-        <div className="mb-7 cursor-pointer" onClick={() => navigate('/')}>
-          <BackSvg />
-        </div>
-
-        {/* details */}
-        <div className="grid grid-cols-1 xl:grid-cols-2">
-          <div className="flex flex-col">
-            <div
-              className="relative overflow-hidden"
-              style={{ aspectRatio: '839 / 670' }}
-            >
-              <img
-                className="h-full w-full rounded-2xl object-cover"
-                src={DUMMY_LISTING_DETAILS.image}
-              />
-              <div className="absolute left-10 top-10 flex items-center justify-center rounded-2xl bg-[#02152680] p-2">
-                <p className="text-xl font-medium leading-6 text-white">
-                  {DUMMY_LISTING_DETAILS.is_rental ? 'ქირავდება' : 'იყიდება'}
-                </p>
-              </div>
-            </div>
-            <p className="p-3 text-right leading-5 text-[#808A93]">
-              {'გამოქვეყნების თარიღი '}
-              {formattedDate}
-            </p>
+      <div className="my-16 flex flex-col gap-14">
+        <section className="mx-40">
+          {/* back button */}
+          <div className="mb-7 cursor-pointer" onClick={() => navigate('/')}>
+            <BackSvg />
           </div>
 
-          <div className="flex flex-col gap-6 px-16 pt-7">
-            <h1 className="text-5xl font-bold leading-[60px] text-[#021526]">
-              {DUMMY_LISTING_DETAILS.price}
-              {' ₾'}
-            </h1>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-1">
-                <div className="flex aspect-square w-[22px] items-center justify-center">
-                  <LocationSvg />
+          {/* details */}
+          <div className="grid grid-cols-1 xl:grid-cols-2">
+            <div className="flex flex-col">
+              <div
+                className="relative overflow-hidden"
+                style={{ aspectRatio: '839 / 670' }}
+              >
+                <img
+                  className="h-full w-full rounded-2xl object-cover"
+                  src={DUMMY_LISTING_DETAILS.image}
+                />
+                <div className="absolute left-10 top-10 flex items-center justify-center rounded-2xl bg-[#02152680] p-2">
+                  <p className="text-xl font-medium leading-6 text-white">
+                    {DUMMY_LISTING_DETAILS.is_rental ? 'ქირავდება' : 'იყიდება'}
+                  </p>
                 </div>
-                <p className="text-2xl text-[#808A93]">
-                  {DUMMY_LISTING_DETAILS.city.name}
-                </p>
-                <p className="text-2xl text-[#808A93]">
-                  {DUMMY_LISTING_DETAILS.address}
-                </p>
               </div>
-
-              <div className="inline-flex items-center gap-1">
-                <div className="flex aspect-square w-[22px] items-center justify-center">
-                  <AreaSvg />
-                </div>
-                <p className="text-2xl text-[#808A93]">
-                  {'ფართი '}
-                  {DUMMY_LISTING_DETAILS.area}
-                  {' მ'}
-                  <sup>2</sup>
-                </p>
-              </div>
-
-              <div className="inline-flex items-center gap-1">
-                <div className="flex aspect-square w-[22px] items-center justify-center">
-                  <BedSvg />
-                </div>
-                <p className="text-2xl text-[#808A93]">
-                  {'საძინებელი '}
-                  {DUMMY_LISTING_DETAILS.bedrooms}
-                </p>
-              </div>
-
-              <div className="inline-flex items-center gap-1">
-                <div className="flex aspect-square w-[22px] items-center justify-center">
-                  <ZipCodeSvg />
-                </div>
-                <p className="text-2xl text-[#808A93]">
-                  {'საფოსტო ინდექსი '}
-                  {DUMMY_LISTING_DETAILS.zip_code}
-                </p>
-              </div>
+              <p className="p-3 text-right leading-5 text-[#808A93]">
+                {'გამოქვეყნების თარიღი '}
+                {formattedDate}
+              </p>
             </div>
 
-            <p className="leading-7 text-[#808A93]">
-              {DUMMY_LISTING_DETAILS.description}
-            </p>
+            <div className="flex flex-col gap-6 px-16 pt-7">
+              <h1 className="text-5xl font-bold leading-[60px] text-[#021526]">
+                {DUMMY_LISTING_DETAILS.price}
+                {' ₾'}
+              </h1>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-1">
+                  <div className="flex aspect-square w-[22px] items-center justify-center">
+                    <LocationSvg />
+                  </div>
+                  <p className="text-2xl text-[#808A93]">
+                    {DUMMY_LISTING_DETAILS.city.name}
+                  </p>
+                  <p className="text-2xl text-[#808A93]">
+                    {DUMMY_LISTING_DETAILS.address}
+                  </p>
+                </div>
 
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-4 rounded-lg border border-[#DBDBDB] p-5">
-                <div className="flex items-center gap-4">
-                  <img
-                    className="aspect-square w-20 rounded-full object-cover"
-                    src={DUMMY_LISTING_DETAILS.agent.avatar}
-                  />
+                <div className="inline-flex items-center gap-1">
+                  <div className="flex aspect-square w-[22px] items-center justify-center">
+                    <AreaSvg />
+                  </div>
+                  <p className="text-2xl text-[#808A93]">
+                    {'ფართი '}
+                    {DUMMY_LISTING_DETAILS.area}
+                    {' მ'}
+                    <sup>2</sup>
+                  </p>
+                </div>
+
+                <div className="inline-flex items-center gap-1">
+                  <div className="flex aspect-square w-[22px] items-center justify-center">
+                    <BedSvg />
+                  </div>
+                  <p className="text-2xl text-[#808A93]">
+                    {'საძინებელი '}
+                    {DUMMY_LISTING_DETAILS.bedrooms}
+                  </p>
+                </div>
+
+                <div className="inline-flex items-center gap-1">
+                  <div className="flex aspect-square w-[22px] items-center justify-center">
+                    <ZipCodeSvg />
+                  </div>
+                  <p className="text-2xl text-[#808A93]">
+                    {'საფოსტო ინდექსი '}
+                    {DUMMY_LISTING_DETAILS.zip_code}
+                  </p>
+                </div>
+              </div>
+
+              <p className="leading-7 text-[#808A93]">
+                {DUMMY_LISTING_DETAILS.description}
+              </p>
+
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-4 rounded-lg border border-[#DBDBDB] p-5">
+                  <div className="flex items-center gap-4">
+                    <img
+                      className="aspect-square w-20 rounded-full object-cover"
+                      src={DUMMY_LISTING_DETAILS.agent.avatar}
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p className="leading-5 text-[#021526]">
+                        {DUMMY_LISTING_DETAILS.agent.name}{' '}
+                        {DUMMY_LISTING_DETAILS.agent.surname}
+                      </p>
+                      <p className="text-sm leading-4 text-[#676E76]">აგენტი</p>
+                    </div>
+                  </div>
                   <div className="flex flex-col gap-1">
-                    <p className="leading-5 text-[#021526]">
-                      {DUMMY_LISTING_DETAILS.agent.name}{' '}
-                      {DUMMY_LISTING_DETAILS.agent.surname}
-                    </p>
-                    <p className="text-sm leading-4 text-[#676E76]">აგენტი</p>
+                    <div className="flex items-center gap-1">
+                      <MailSvg />
+                      <p className="text-sm leading-4 text-[#808A93]">
+                        {DUMMY_LISTING_DETAILS.agent.email}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <PhoneSvg />
+                      <p className="text-sm leading-4 text-[#808A93]">
+                        {DUMMY_LISTING_DETAILS.agent.phone}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-1">
-                    <MailSvg />
-                    <p className="text-sm leading-4 text-[#808A93]">
-                      {DUMMY_LISTING_DETAILS.agent.email}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <PhoneSvg />
-                    <p className="text-sm leading-4 text-[#808A93]">
-                      {DUMMY_LISTING_DETAILS.agent.phone}
-                    </p>
-                  </div>
+                <div className="flex">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-[#676E76] p-3 text-xs font-medium text-[#676E76]"
+                  >
+                    ლისთინგის წაშლა
+                  </button>
                 </div>
-              </div>
-              <div className="flex">
-                <button
-                  type="button"
-                  className="rounded-lg border border-[#676E76] p-3 text-xs font-medium text-[#676E76]"
-                >
-                  ლისთინგის წაშლა
-                </button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-      {/* carousel */}
-      <section></section>
+        </section>
+        {/* carousel */}
+        <section>
+          <ListingsCarousel>
+            {dummyListing.map(listing => (
+              <div className="w-96 px-4">
+                <Card key={listing.id} {...listing} />
+              </div>
+            ))}
+          </ListingsCarousel>
+        </section>
+      </div>
     </HeaderLayout>
   )
 }
