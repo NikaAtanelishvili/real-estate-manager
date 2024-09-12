@@ -1,5 +1,5 @@
 import { HeaderLayout } from '@/layouts'
-import { Filter, ListingGrid } from './components'
+import { CreateListingButton, Filter, ListingGrid } from './components'
 import dummyListing from './dummyListing'
 import { FilterProvider } from '@/contexts'
 
@@ -8,8 +8,11 @@ const Listing: React.FC = () => {
     <FilterProvider>
       <HeaderLayout>
         <div className="px-40">
-          <section>
+          <section className="flex justify-between">
             <Filter />
+            <div>
+              <CreateListingButton />
+            </div>
           </section>
           <section>
             <ListingGrid listrings={dummyListing} />
