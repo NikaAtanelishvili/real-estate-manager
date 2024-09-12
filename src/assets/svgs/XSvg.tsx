@@ -10,14 +10,14 @@ const XSvg: React.FC = () => {
       <path
         d="M10.5 4L3.5 11"
         stroke="#354451"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M3.5 4L10.5 11"
         stroke="#354451"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
