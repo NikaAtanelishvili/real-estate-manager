@@ -55,36 +55,43 @@ const Region: React.FC<RegionType> = ({
         {isOpen ? <CloseSvg /> : <OpenSvg />}
       </button>
       {isOpen && (
-        <div className="absolute z-10 mt-4 flex w-auto min-w-max flex-col gap-6 rounded-xl border border-[#DBDBDB] bg-white p-6 shadow-[5px_5px_12px_0px_#02152614]">
-          <p className="w-full font-medium leading-5 text-[#021526]">
-            რეგიონის მიხედვით
-          </p>
-          <ul className="grid w-full grid-cols-3 gap-x-12 gap-y-4">
-            {regions.map(region => (
-              <li key={region.id} className="min-w-48">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    className="custom-checkbox form-checkbox h-5 w-5"
-                    checked={selectedRegions.includes(region.id)}
-                    onChange={() => handleCheckboxChange(region.id)}
-                  />
-                  <p className="text-sm leading-4 text-[#021526]">
-                    {region.name}
-                  </p>
-                </label>
-              </li>
-            ))}
-          </ul>
-          <div className="flex w-full items-center justify-end">
-            <button
-              onClick={applySelection}
-              className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white"
-            >
-              არჩევა
-            </button>
+        <>
+          {/* TRANSPARENT BACKGROUND! WHEN USER CLICKS OUTSIDE OF DROPDOWN IT CLOSES */}
+          <div
+            className="fixed inset-0 z-0 bg-transparent"
+            onClick={toggleDropdown}
+          ></div>
+          <div className="absolute z-10 mt-4 flex w-auto min-w-max flex-col gap-6 rounded-xl border border-[#DBDBDB] bg-white p-6 shadow-[5px_5px_12px_0px_#02152614]">
+            <p className="w-full font-medium leading-5 text-[#021526]">
+              რეგიონის მიხედვით
+            </p>
+            <ul className="grid w-full grid-cols-3 gap-x-12 gap-y-4">
+              {regions.map(region => (
+                <li key={region.id} className="min-w-48">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      className="custom-checkbox form-checkbox h-5 w-5"
+                      checked={selectedRegions.includes(region.id)}
+                      onChange={() => handleCheckboxChange(region.id)}
+                    />
+                    <p className="text-sm leading-4 text-[#021526]">
+                      {region.name}
+                    </p>
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <div className="flex w-full items-center justify-end">
+              <button
+                onClick={applySelection}
+                className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white"
+              >
+                არჩევა
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )
