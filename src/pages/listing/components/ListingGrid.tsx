@@ -37,10 +37,18 @@ const ListingGrid: React.FC<{ listrings: CardProps[] }> = props => {
   })
 
   return (
-    <div className="grid grid-cols-4 gap-5">
-      {filteredListings.map(listing => (
-        <Card key={listing.id} {...listing} />
-      ))}
+    <div>
+      {filteredListings.length > 0 ? (
+        <div className="grid grid-cols-4 gap-5">
+          {filteredListings.map(listing => (
+            <Card key={listing.id} {...listing} />
+          ))}
+        </div>
+      ) : (
+        <h1 className="text-xl leading-6 text-[#021526CC]">
+          აღნიშნული მონაცემებით განცხადება არ იძებნება
+        </h1>
+      )}
     </div>
   )
 }
