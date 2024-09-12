@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useContext, useState } from 'react'
 import Region from './Region'
 import Price from './Price'
 import Area from './Area'
 import Bedrooms from './Bedrooms'
 import { SelectedItem } from '@/components'
+import { FilterContext } from '@/contexts'
 
 const dummyRegions = [
   { id: 1, name: 'New York' },
@@ -26,6 +27,26 @@ const dummyRegions = [
 const dummyBedrooms = [1, 2, 3, 4]
 
 const Filter: React.FC = () => {
+  const {
+    selectedRegions,
+    setSelectedRegions,
+    selectedPrice,
+    setSelectedPrice,
+    selectedArea,
+    setSelectedArea,
+    selectedBedrooms,
+    setSelectedBedrooms,
+    removeSelectedItem,
+  } = useContext(FilterContext)
+
+  // ONLY ONE DROPDOWN IS OPEN AT A TIME
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+
+  const toggleDropdown = (dropdown: string) => {
+    setOpenDropdown(prev => (prev === dropdown ? null : dropdown))
+  }
+
+  /*
   // State to track selected filters
   const [selectedRegions, setSelectedRegions] = useState<number[]>([])
   const [selectedPrice, setSelectedPrice] = useState<{
@@ -37,13 +58,6 @@ const Filter: React.FC = () => {
     max: number
   }>({ min: 0, max: Infinity })
   const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
-
-  // ONLY ONE DROPDOWN IS OPEN AT A TIME
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-
-  const toggleDropdown = (dropdown: string) => {
-    setOpenDropdown(prev => (prev === dropdown ? null : dropdown))
-  }
 
   const handleRegionSelection = useCallback((regions: number[]) => {
     setSelectedRegions(regions)
@@ -87,7 +101,7 @@ const Filter: React.FC = () => {
         break
     }
   }
-
+ */
   return (
     <div className="inline-flex flex-col gap-4">
       <div className="relative inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
@@ -95,26 +109,26 @@ const Filter: React.FC = () => {
           regions={dummyRegions}
           isOpen={openDropdown === 'region'}
           toggleDropdown={() => toggleDropdown('region')}
-          onSelectionChange={handleRegionSelection}
+          onSelectionChange={setSelectedRegions}
           selectedRegions={selectedRegions}
         />
         <Price
           isOpen={openDropdown === 'price'}
           toggleDropdown={() => toggleDropdown('price')}
-          onSelectionChange={handlePriceSelection}
+          onSelectionChange={(min, max) => setSelectedPrice({ min, max })}
           selectedPrice={selectedPrice}
         />
         <Area
           isOpen={openDropdown === 'area'}
           toggleDropdown={() => toggleDropdown('area')}
-          onSelectionChange={handleAreaSelection}
+          onSelectionChange={(min, max) => setSelectedArea({ min, max })}
           selectedArea={selectedArea}
         />
         <Bedrooms
           isOpen={openDropdown === 'bedrooms'}
           toggleDropdown={() => toggleDropdown('bedrooms')}
           bedrooms={dummyBedrooms}
-          onSelectionChange={handleBedroomsSelection}
+          onSelectionChange={setSelectedBedrooms}
           selectedBedrooms={selectedBedrooms}
         />
       </div>
