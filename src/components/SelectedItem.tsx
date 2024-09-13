@@ -1,7 +1,8 @@
 import { XSvg } from '@/assets'
+import { ReactNode } from 'react'
 
 const selectedItem: React.FC<{
-  label: string | number
+  label: ReactNode
   onRemove: () => void
 }> = ({ label, onRemove }) => {
   return (

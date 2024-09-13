@@ -155,7 +155,14 @@ const Filter: React.FC = () => {
         {/* Display selected area */}
         {selectedArea.min !== 0 && selectedArea.max !== Infinity && (
           <SelectedItem
-            label={`${selectedArea.min} მ - ${selectedArea.max} მ`}
+            label={
+              <>
+                {`${selectedArea.min} მ`}
+                <sup>2</sup>
+                {` - ${selectedArea.max} მ`}
+                <sup>2</sup>
+              </>
+            }
             onRemove={() => removeSelectedItem('area', null)}
           />
         )}
