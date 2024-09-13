@@ -3,7 +3,7 @@ import { HeaderLayout } from '@/layouts'
 import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { FileInput, Select, Textarea } from './components'
+import { FileInput, RadioButton, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
 import { useMemo } from 'react'
 
@@ -55,7 +55,7 @@ const CreateListing: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      is_rental: '',
+      is_rental: 0,
       address: '',
       zip_code: '',
       region: {
@@ -100,11 +100,28 @@ const CreateListing: React.FC = () => {
         </h1>
         <form onSubmit={formik.handleSubmit}>
           {/* DEAL TYPE */}
-          {/* <div>
+          <div>
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               გარიგების ტიპი
             </h2>
-          </div> */}
+            <div className="flex gap-9">
+              <RadioButton
+                label="იყიდება"
+                name="is_rental"
+                value={0}
+                checked={formik.values.is_rental === 0}
+                onChange={() => formik.setFieldValue('is_rental', 0)}
+              />
+
+              <RadioButton
+                label="ქირავდება"
+                name="is_rental"
+                value={1}
+                checked={formik.values.is_rental === 1}
+                onChange={() => formik.setFieldValue('is_rental', 1)}
+              />
+            </div>
+          </div>
 
           {/* LOCATION */}
           <div>
