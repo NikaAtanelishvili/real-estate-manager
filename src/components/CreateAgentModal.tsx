@@ -5,20 +5,42 @@ import * as Yup from 'yup'
 import Button from './Button'
 import FileInput from './FileInput'
 
+interface CreateAgent {
+  name: string
+  surname: string
+  email: string
+  phone: string
+  avatar: string
+}
+
+const createFormData = (values: CreateAgent) => {
+  const formData = new FormData()
+
+  formData.append('name', values.name)
+  formData.append('surname', values.surname)
+  formData.append('email', values.email)
+  formData.append('phone', values.phone)
+  formData.append('avatar', values.avatar)
+
+  return formData
+}
+
+const validationSchema = Yup.object({
+  name: Yup.string().required().min(2),
+  surname: Yup.string().required().min(2),
+  email: Yup.string()
+    .required()
+    .matches(/@redberry\.ge$/),
+  avatar: Yup.string().required(),
+  phone: Yup.string()
+    .required()
+    .matches(/^5\d{8}$/),
+})
+
 const CreateAgentModal: React.FC<{
   closeModal: () => void
 }> = props => {
-  const validationSchema = Yup.object({
-    name: Yup.string().required().min(2),
-    surname: Yup.string().required().min(2),
-    email: Yup.string()
-      .required()
-      .matches(/@redberry\.ge$/),
-    avatar: Yup.string().required(),
-    phone: Yup.string()
-      .required()
-      .matches(/^5\d{8}$/),
-  })
+  const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
 
   const formik = useFormik({
     initialValues: {
@@ -27,12 +49,63 @@ const CreateAgentModal: React.FC<{
       email: '',
       avatar: '',
       phone: '',
-    },
+    } as CreateAgent,
     validationSchema,
-    onSubmit: async values => {
-      console.log(values)
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const formData = createFormData(values)
+
+        const response = await fetch(
+          `https://api.real-estate-manager.redberryinternship.ge/api/agents`,
+          {
+            method: 'POST',
+            body: formData,
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${VITE_API_TOKEN}`,
+            },
+          },
+        )
+
+        switch (response.status) {
+          case 201: {
+            const data = await response.json()
+            console.log(data)
+            props.closeModal()
+            break
+          }
+
+          case 401: {
+            const error = await response.json()
+            throw new Error(error.message || 'Please provide valid API token')
+          }
+
+          case 422: {
+            const error = await response.json()
+            throw new Error(error.message || 'Validation error')
+          }
+
+          case 500: {
+            const error = await response.json()
+            throw new Error(error.message || 'Network response is unavailable')
+          }
+
+          default: {
+            const error = await response.json()
+            throw new Error(
+              error.message || `Unexpected status code: ${response.status}`,
+            )
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setSubmitting(false)
+      }
     },
   })
+
+  console.log(formik)
 
   return ReactDOM.createPortal(
     <div
@@ -47,6 +120,7 @@ const CreateAgentModal: React.FC<{
           აგენტის დამატება
         </h1>
         <form
+          id="agent"
           onSubmit={formik.handleSubmit}
           className="flex w-full flex-col gap-20"
         >
@@ -91,13 +165,16 @@ const CreateAgentModal: React.FC<{
           {/* SUBMIT AND CANCEL BUTTONS */}
           <div className="flex justify-end gap-4">
             <Button
+              form={'agent'}
               type={'button'}
               onClick={props.closeModal}
               backgroundColor={'#FFF'}
               textColor={'#F93B1D'}
               text={'გაუქმება'}
             />
+            <button type="submit">SUbmit</button>
             <Button
+              form={'agent'}
               type={'submit'}
               backgroundColor={'#F93B1D'}
               textColor={'#FFF'}
