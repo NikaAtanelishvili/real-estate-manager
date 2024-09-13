@@ -32,3 +32,21 @@ export interface ListingDetailsType extends CardProps {
     avatar: string
   }
 }
+
+export interface AgentType {
+  id: number
+  name: string
+  surname: string
+  avatar: string
+}
+
+export interface CityType {
+  id: number
+  name: string
+  region_id: number
+}
+
+export interface RegionType {
+  id: number
+  name: string
+}

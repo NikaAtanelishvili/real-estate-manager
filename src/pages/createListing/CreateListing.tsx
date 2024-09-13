@@ -1,18 +1,24 @@
 import { Input } from '@/components'
 import { HeaderLayout } from '@/layouts'
+import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { Select } from './components'
+import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
+import { useMemo } from 'react'
 
 interface CreateListing {
   is_rental: number
   address: string
   zip_code: number
-  region: string
-  city: string
+  region: RegionType
+  city: CityType
   price: number
   area: number
   bedrooms: number
   description: string
+  image: string
+  agent: AgentType
 }
 
 const CreateListing: React.FC = () => {
@@ -20,12 +26,26 @@ const CreateListing: React.FC = () => {
     is_rental: Yup.number().required(),
     address: Yup.string().min(2).required(),
     zip_code: Yup.number().required(),
-    region: Yup.string().required(),
-    city: Yup.string().required(),
+    region: Yup.object({
+      id: Yup.number().required(),
+      name: Yup.string().required(),
+    }).required(),
+    city: Yup.object({
+      id: Yup.number().required(),
+      name: Yup.string().required(),
+      region_id: Yup.number().required(),
+    }).required(),
     price: Yup.number().required(),
     area: Yup.number().required(),
     bedrooms: Yup.number().required(),
     description: Yup.string().min(5).required(),
+    image: Yup.string().required(),
+    agent: Yup.object({
+      surname: Yup.string().required(),
+      name: Yup.string().required(),
+      avatar: Yup.string().required(),
+      id: Yup.number().required(),
+    }).required(),
   })
 
   const formik = useFormik({
@@ -33,18 +53,39 @@ const CreateListing: React.FC = () => {
       is_rental: '',
       address: '',
       zip_code: '',
-      region: '',
-      city: '',
+      region: {
+        id: 0,
+        name: '',
+      },
+      city: {
+        id: 0,
+        name: '',
+        region_id: 0,
+      },
       price: '',
       area: '',
       bedrooms: '',
       description: '',
+      image: '',
+      agent: {
+        surname: '',
+        name: '',
+        avatar: '',
+        id: 0,
+      },
     },
+
     validationSchema,
     onSubmit: values => {
       console.log(values)
     },
   })
+
+  const filtered_dummy_cities = useMemo(
+    () =>
+      dummy_cities.filter(city => city.region_id == formik.values.region.id),
+    [formik.values.region.id],
+  )
 
   return (
     <HeaderLayout>
@@ -65,7 +106,7 @@ const CreateListing: React.FC = () => {
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               მდებარეობა
             </h2>
-            <div className="">
+            <div className="grid grid-cols-2 gap-4">
               <Input
                 id={'address'}
                 label={'მისამართი *'}
@@ -80,6 +121,20 @@ const CreateListing: React.FC = () => {
                 type={'number'}
                 errorText={'მხოლოდ რიცხვები'}
               />
+              <Select
+                id={'region'}
+                label={'რეგიონი'}
+                formik={formik}
+                options={dummy_regions}
+              />
+              {formik.values.region.name && (
+                <Select
+                  id={'city'}
+                  label={'ქალაქი'}
+                  formik={formik}
+                  options={filtered_dummy_cities}
+                />
+              )}
             </div>
           </div>
 
@@ -121,11 +176,19 @@ const CreateListing: React.FC = () => {
           </div>
 
           {/* AGENT */}
-          {/* <div>
+          <div>
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               აგენტი
             </h2>
-          </div> */}
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                id={'agent'}
+                label={'აირჩიე'}
+                formik={formik}
+                options={dummy_agents}
+              />
+            </div>
+          </div>
         </form>
       </div>
     </HeaderLayout>
