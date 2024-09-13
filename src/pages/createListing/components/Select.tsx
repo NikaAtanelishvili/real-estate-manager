@@ -1,4 +1,4 @@
-import { OpenSvg } from '@/assets'
+import { AddSvg, OpenSvg } from '@/assets'
 import { AgentType, CityType, RegionType } from '@/types'
 import { FormikValues } from 'formik'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ interface SelectProps {
   label: string
   formik: FormikValues
   options: AgentType[] | CityType[] | RegionType[]
+  openModal?: () => void
 }
 
 const Select: React.FC<SelectProps> = props => {
@@ -46,18 +47,29 @@ const Select: React.FC<SelectProps> = props => {
       <div className="relative">
         <div
           onClick={handleToggle}
-          className={`flex h-11 w-full items-center justify-between rounded-md border border-[#808A93] px-2 leading-5 text-[#021526] ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'} ${isOpen && 'rounded-b-none border-b-0'}`}
+          className={`flex h-11 w-full items-center justify-between rounded-md border border-[#808A93] px-2 leading-5 text-[#021526] ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'} ${isOpen && 'rounded-b-none border-b-[#FFF]'}`}
         >
           <p>{renderSelectedOption()}</p>
           <OpenSvg />
         </div>
         {isOpen && (
           <div className="absolute flex w-full flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
+            {typeof props.openModal === 'function' && (
+              <div
+                onClick={props.openModal}
+                className="flex h-11 cursor-pointer items-center justify-start gap-3 border-t border-[#808A93] px-4 hover:bg-gray-200"
+              >
+                <AddSvg />
+                <p className="text-sm leading-4 text-[#021526]">
+                  დაამატე აგენტი
+                </p>
+              </div>
+            )}
             {props.options.map(option => (
               <div
                 key={option.id}
                 onClick={() => handleOptionSelect(option)}
-                className="cursor-pointer border-t border-[#808A93] px-4 py-2 hover:bg-gray-200"
+                className="flex h-11 cursor-pointer items-center justify-start border-t border-[#808A93] px-4 text-sm leading-4 text-[#021526] hover:bg-gray-200"
               >
                 {option.name} {'surname' in option && option.surname}
               </div>

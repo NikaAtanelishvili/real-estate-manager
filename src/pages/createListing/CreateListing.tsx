@@ -1,11 +1,11 @@
-import { Button, FileInput, Input } from '@/components'
+import { Button, CreateAgentModal, FileInput, Input } from '@/components'
 import { HeaderLayout } from '@/layouts'
 import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { RadioButton, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 interface CreateListing {
@@ -41,6 +41,11 @@ const createFormData = (values: CreateListing) => {
 }
 
 const CreateListing: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
   const navigate = useNavigate()
 
   const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
@@ -291,6 +296,7 @@ const CreateListing: React.FC = () => {
                 label={'აირჩიე'}
                 formik={formik}
                 options={dummy_agents}
+                openModal={openModal}
               />
             </div>
           </div>
@@ -315,6 +321,7 @@ const CreateListing: React.FC = () => {
           </div>
         </form>
       </div>
+      {isModalOpen && <CreateAgentModal closeModal={closeModal} />}
     </HeaderLayout>
   )
 }
