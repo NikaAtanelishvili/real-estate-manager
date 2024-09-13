@@ -6,22 +6,45 @@ import * as Yup from 'yup'
 import { Button, FileInput, RadioButton, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface CreateListing {
   is_rental: number
   address: string
-  zip_code: number
+  zip_code: string
   region: RegionType
   city: CityType
-  price: number
-  area: number
-  bedrooms: number
+  price: string
+  area: string
+  bedrooms: string
   description: string
   image: string
   agent: AgentType
 }
 
+const createFormData = (values: CreateListing) => {
+  const formData = new FormData()
+
+  formData.append('is_rental', values.is_rental.toString())
+  formData.append('address', values.address)
+  formData.append('zip_code', values.zip_code)
+  formData.append('price', values.price)
+  formData.append('area', values.area)
+  formData.append('bedrooms', values.bedrooms)
+  formData.append('description', values.description)
+  formData.append('region_id', values.region.id.toString())
+  formData.append('city_id', values.city.id.toString())
+  formData.append('image', values.image)
+  formData.append('agent_id', values.agent.id.toString())
+
+  return formData
+}
+
 const CreateListing: React.FC = () => {
+  const navigate = useNavigate()
+
+  const VITE_API_TOKEN = import.meta.env.VITE_API_URL
+
   const validationSchema = Yup.object({
     is_rental: Yup.number().required(),
     address: Yup.string().min(2).required(),
@@ -78,11 +101,60 @@ const CreateListing: React.FC = () => {
         avatar: '',
         id: 0,
       },
-    },
+    } as CreateListing,
 
     validationSchema,
-    onSubmit: values => {
-      console.log(values)
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const formData = createFormData(values)
+
+        const response = await fetch(
+          `https://api.real-estate-manager.redberryinternship.ge/api/real-estates`,
+          {
+            method: 'POST',
+            body: formData,
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${VITE_API_TOKEN}`,
+            },
+          },
+        )
+
+        switch (response.status) {
+          case 201: {
+            const data = await response.json()
+            console.log(data)
+            navigate('/')
+            break
+          }
+
+          case 401: {
+            const error = await response.json()
+            throw new Error(error.message || 'Please provide valid API token')
+          }
+
+          case 422: {
+            const error = await response.json()
+            throw new Error(error.message || 'Validation error')
+          }
+
+          case 500: {
+            const error = await response.json()
+            throw new Error(error.message || 'Network response is unavailable')
+          }
+
+          default: {
+            const error = await response.json()
+            throw new Error(
+              error.message || `Unexpected status code: ${response.status}`,
+            )
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setSubmitting(false)
+      }
     },
   })
 
@@ -227,9 +299,7 @@ const CreateListing: React.FC = () => {
           <div className="flex justify-end gap-4">
             <Button
               type={'button'}
-              onClick={() => {
-                formik.resetForm()
-              }}
+              onClick={() => navigate('/')}
               backgroundColor={'#FFF'}
               textColor={'#F93B1D'}
               text={'გაუქმება'}
@@ -238,7 +308,7 @@ const CreateListing: React.FC = () => {
               type={'submit'}
               backgroundColor={'#F93B1D'}
               textColor={'#FFF'}
-              text={' დაამატე ლისტინგი'}
+              text={formik.isSubmitting ? 'დაელოდეთ...' : ' დაამატე ლისტინგი'}
             />
           </div>
         </form>
