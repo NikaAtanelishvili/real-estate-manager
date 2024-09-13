@@ -1,5 +1,10 @@
 import { HeaderLayout } from '@/layouts'
-import { CreateListingButton, Filter, ListingGrid } from './components'
+import {
+  CreateAgentButton,
+  CreateListingButton,
+  Filter,
+  ListingGrid,
+} from './components'
 import dummyListing from './dummyListing'
 import { FilterProvider } from '@/contexts'
 
@@ -12,6 +17,7 @@ const Listing: React.FC = () => {
             <Filter />
             <div>
               <CreateListingButton />
+              <CreateAgentButton />
             </div>
           </section>
           <section>
