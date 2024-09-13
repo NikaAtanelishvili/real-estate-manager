@@ -3,7 +3,7 @@ import { HeaderLayout } from '@/layouts'
 import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { Select, Textarea } from './components'
+import { FileInput, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
 import { useMemo } from 'react'
 
@@ -184,6 +184,7 @@ const CreateListing: React.FC = () => {
               formik={formik}
               errorText={'მინიმუმ ხუთი სიტყვა'}
             />
+            <FileInput id={'image'} label={'ატვირთეთ ფოტო *'} formik={formik} />
           </div>
 
           {/* AGENT */}
