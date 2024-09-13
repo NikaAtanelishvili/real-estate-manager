@@ -3,7 +3,7 @@ import { HeaderLayout } from '@/layouts'
 import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { FileInput, RadioButton, Select, Textarea } from './components'
+import { Button, FileInput, RadioButton, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
 import { useMemo } from 'react'
 
@@ -94,13 +94,17 @@ const CreateListing: React.FC = () => {
 
   return (
     <HeaderLayout>
-      <div>
-        <h1 className="text-4xl font-medium text-[#021526]">
+      <div className="m-auto my-16 flex max-w-3xl flex-col gap-16">
+        <h1 className="text-center text-4xl font-medium text-[#021526]">
           ლისტინგის დამატება
         </h1>
-        <form onSubmit={formik.handleSubmit}>
+        <form
+          onSubmit={formik.handleSubmit}
+          id="createListing"
+          className="flex flex-col gap-20"
+        >
           {/* DEAL TYPE */}
-          <div>
+          <div className="flex flex-col gap-4">
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               გარიგების ტიპი
             </h2>
@@ -124,7 +128,7 @@ const CreateListing: React.FC = () => {
           </div>
 
           {/* LOCATION */}
-          <div>
+          <div className="flex flex-col gap-4">
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               მდებარეობა
             </h2>
@@ -205,7 +209,7 @@ const CreateListing: React.FC = () => {
           </div>
 
           {/* AGENT */}
-          <div>
+          <div className="flex flex-col gap-4">
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               აგენტი
             </h2>
@@ -217,6 +221,25 @@ const CreateListing: React.FC = () => {
                 options={dummy_agents}
               />
             </div>
+          </div>
+
+          {/* SUBMIT AND CANCEL BUTTONS */}
+          <div className="flex justify-end gap-4">
+            <Button
+              type={'button'}
+              onClick={() => {
+                formik.resetForm()
+              }}
+              backgroundColor={'#FFF'}
+              textColor={'#F93B1D'}
+              text={'გაუქმება'}
+            />
+            <Button
+              type={'submit'}
+              backgroundColor={'#F93B1D'}
+              textColor={'#FFF'}
+              text={' დაამატე ლისტინგი'}
+            />
           </div>
         </form>
       </div>
