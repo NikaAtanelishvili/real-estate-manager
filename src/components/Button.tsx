@@ -5,13 +5,14 @@ interface ButtonProps {
   backgroundColor: string
   text: string
   textColor: string
+  form: string
   onClick?: () => void
 }
 
 const Button: React.FC<ButtonProps> = props => {
   return (
     <button
-      form="createListing"
+      form={props.form}
       onClick={props.onClick}
       type={props.type}
       style={{ backgroundColor: props.backgroundColor }}

@@ -172,7 +172,7 @@ const CreateListing: React.FC = () => {
         </h1>
         <form
           onSubmit={formik.handleSubmit}
-          id="createListing"
+          id="listing"
           className="flex flex-col gap-20"
         >
           {/* DEAL TYPE */}
@@ -298,6 +298,7 @@ const CreateListing: React.FC = () => {
           {/* SUBMIT AND CANCEL BUTTONS */}
           <div className="flex justify-end gap-4">
             <Button
+              form={'listing'}
               type={'button'}
               onClick={() => navigate('/')}
               backgroundColor={'#FFF'}
@@ -305,6 +306,7 @@ const CreateListing: React.FC = () => {
               text={'გაუქმება'}
             />
             <Button
+              form={'listing'}
               type={'submit'}
               backgroundColor={'#F93B1D'}
               textColor={'#FFF'}
