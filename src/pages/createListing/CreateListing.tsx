@@ -3,7 +3,7 @@ import { HeaderLayout } from '@/layouts'
 import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { Select } from './components'
+import { Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
 import { useMemo } from 'react'
 
@@ -38,7 +38,12 @@ const CreateListing: React.FC = () => {
     price: Yup.number().required(),
     area: Yup.number().required(),
     bedrooms: Yup.number().required(),
-    description: Yup.string().min(5).required(),
+    description: Yup.string()
+      .test('minWords', value => {
+        if (!value) return true
+        return value.split(' ').filter(Boolean).length >= 5
+      })
+      .required(),
     image: Yup.string().required(),
     agent: Yup.object({
       surname: Yup.string().required(),
@@ -139,7 +144,7 @@ const CreateListing: React.FC = () => {
           </div>
 
           {/* DETAILS */}
-          <div>
+          <div className="flex flex-col gap-4">
             <h2 className="font-Helvetica font-medium leading-5 text-[#1A1A1F]">
               ბინის დეტალები
             </h2>
@@ -173,6 +178,12 @@ const CreateListing: React.FC = () => {
                 errorText={'მხოლოდ რიცხვები'}
               />
             </div>
+            <Textarea
+              id={'description'}
+              label={'აღწერა *'}
+              formik={formik}
+              errorText={'მინიმუმ ხუთი სიტყვა'}
+            />
           </div>
 
           {/* AGENT */}
