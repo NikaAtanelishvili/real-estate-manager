@@ -21,16 +21,30 @@ const Price: React.FC<PriceType> = ({
 }) => {
   const formik = useFormik({
     initialValues: {
-      minPrice: '',
-      maxPrice: '',
+      minPrice: -Infinity,
+      maxPrice: Infinity,
+    } as {
+      minPrice: number | string
+      maxPrice: number | string
+    },
+    // =========TYPING AND THEN DELETING IN INPUT SOMEHOW TURN VALUE INTO EMPTY STRING===========
+    validate: values => {
+      if (values.minPrice === '') {
+        values.minPrice = -Infinity
+      }
+      if (values.maxPrice === '') {
+        values.maxPrice = Infinity
+      }
     },
     validationSchema: Yup.object({
-      minPrice: Yup.number()
-        .positive('ჩაწერეთ ვალიდური მონაცემები')
-        .max(Yup.ref('maxPrice'), 'ჩაწერეთ ვალიდური მონაცემები'),
-      maxPrice: Yup.number()
-        .positive('ჩაწერეთ ვალიდური მონაცემები')
-        .min(Yup.ref('minPrice'), 'ჩაწერეთ ვალიდური მონაცემები'),
+      minPrice: Yup.number().max(
+        Yup.ref('maxPrice'),
+        'ჩაწერეთ ვალიდური მონაცემები',
+      ),
+      maxPrice: Yup.number().min(
+        Yup.ref('minPrice'),
+        'ჩაწერეთ ვალიდური მონაცემები',
+      ),
     }),
     onSubmit: values => {
       onSelectionChange(Number(values.minPrice), Number(values.maxPrice))
@@ -47,15 +61,16 @@ const Price: React.FC<PriceType> = ({
 
   // Sync local Formik values with parent-selected values (minPrice, maxPrice)
   useEffect(() => {
-    formik.setFieldValue('minPrice', selectedPrice.min || '')
-    formik.setFieldValue('maxPrice', selectedPrice.max || '')
+    formik.setFieldValue('minPrice', selectedPrice.min || -Infinity)
+    formik.setFieldValue('maxPrice', selectedPrice.max || Infinity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPrice])
 
   const error =
     formik.values.minPrice &&
     formik.values.maxPrice &&
-    (formik.errors.minPrice || formik.errors.maxPrice)
+    formik.errors.minPrice &&
+    formik.errors.maxPrice
       ? true
       : false
 

@@ -17,6 +17,7 @@ const RangeInput: React.FC<RangeInputProps> = props => {
         type="number"
         name={props.id}
         placeholder="დან"
+        min={0}
         id={props.id}
         {...props.formik.getFieldProps(props.id)}
       />

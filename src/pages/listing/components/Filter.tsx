@@ -46,62 +46,6 @@ const Filter: React.FC = () => {
     setOpenDropdown(prev => (prev === dropdown ? null : dropdown))
   }
 
-  /*
-  // State to track selected filters
-  const [selectedRegions, setSelectedRegions] = useState<number[]>([])
-  const [selectedPrice, setSelectedPrice] = useState<{
-    min: number
-    max: number
-  }>({ min: 0, max: Infinity })
-  const [selectedArea, setSelectedArea] = useState<{
-    min: number
-    max: number
-  }>({ min: 0, max: Infinity })
-  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
-
-  const handleRegionSelection = useCallback((regions: number[]) => {
-    setSelectedRegions(regions)
-  }, [])
-
-  const handlePriceSelection = useCallback((min: number, max: number) => {
-    setSelectedPrice({ min, max })
-  }, [])
-
-  const handleAreaSelection = useCallback((min: number, max: number) => {
-    setSelectedArea({ min, max })
-  }, [])
-
-  const handleBedroomsSelection = useCallback((bedrooms: number[]) => {
-    setSelectedBedrooms(bedrooms)
-  }, [])
-
-  const removeSelectedItem = (type: string, value: number | null) => {
-    switch (type) {
-      case 'removeFilters':
-        setSelectedRegions([])
-        setSelectedPrice({ min: 0, max: Infinity })
-        setSelectedArea({ min: 0, max: Infinity })
-        setSelectedBedrooms([])
-        break
-      case 'region':
-        setSelectedRegions(selectedRegions.filter(region => region !== value))
-        break
-      case 'price':
-        setSelectedPrice({ min: 0, max: Infinity })
-        break
-      case 'area':
-        setSelectedArea({ min: 0, max: Infinity })
-        break
-      case 'bedrooms':
-        setSelectedBedrooms(
-          selectedBedrooms.filter(bedroom => bedroom !== value),
-        )
-        break
-      default:
-        break
-    }
-  }
- */
   return (
     <div className="inline-flex flex-col gap-4">
       <div className="relative inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
@@ -145,21 +89,22 @@ const Filter: React.FC = () => {
         ))}
 
         {/* Display selected price */}
-        {selectedPrice.min !== 0 && selectedPrice.max !== Infinity && (
+        {(selectedPrice.min !== -Infinity ||
+          selectedPrice.max !== Infinity) && (
           <SelectedItem
-            label={`${selectedPrice.min} ₾ - ${selectedPrice.max} ₾`}
+            label={`${selectedPrice.min === -Infinity ? '0' : selectedPrice.min} ₾ - ${selectedPrice.max === Infinity ? '∞' : selectedPrice.max} ₾`}
             onRemove={() => removeSelectedItem('price', null)}
           />
         )}
 
         {/* Display selected area */}
-        {selectedArea.min !== 0 && selectedArea.max !== Infinity && (
+        {(selectedArea.min !== -Infinity || selectedArea.max !== Infinity) && (
           <SelectedItem
             label={
               <>
-                {`${selectedArea.min} მ`}
+                {`${selectedArea.min === -Infinity ? '0' : selectedArea.min} მ`}
                 <sup>2</sup>
-                {` - ${selectedArea.max} მ`}
+                {` - ${selectedArea.max === Infinity ? '∞' : selectedArea.max} მ`}
                 <sup>2</sup>
               </>
             }

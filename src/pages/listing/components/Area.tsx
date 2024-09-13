@@ -11,7 +11,7 @@ interface AreaType {
   selectedArea: { min: number; max: number }
 }
 
-const areaShortcuts = [10, 20, 30, 40, 50]
+const areaShortcuts = [50, 60, 70, 80, 90]
 
 const Area: React.FC<AreaType> = ({
   isOpen,
@@ -21,16 +21,30 @@ const Area: React.FC<AreaType> = ({
 }) => {
   const formik = useFormik({
     initialValues: {
-      minArea: '',
-      maxArea: '',
+      minArea: -Infinity,
+      maxArea: Infinity,
+    } as {
+      minArea: number | string
+      maxArea: number | string
+    },
+    // =========TYPING AND THEN DELETING IN INPUT SOMEHOW TURN VALUE INTO EMPTY STRING===========
+    validate: values => {
+      if (values.minArea === '') {
+        values.minArea = -Infinity
+      }
+      if (values.maxArea === '') {
+        values.maxArea = Infinity
+      }
     },
     validationSchema: Yup.object({
-      minArea: Yup.number()
-        .positive('ჩაწერეთ ვალიდური მონაცემები')
-        .max(Yup.ref('maxArea'), 'ჩაწერეთ ვალიდური მონაცემები'),
-      maxArea: Yup.number()
-        .positive('ჩაწერეთ ვალიდური მონაცემები')
-        .min(Yup.ref('minArea'), 'ჩაწერეთ ვალიდური მონაცემები'),
+      minArea: Yup.number().max(
+        Yup.ref('maxArea'),
+        'ჩაწერეთ ვალიდური მონაცემები',
+      ),
+      maxArea: Yup.number().min(
+        Yup.ref('minArea'),
+        'ჩაწერეთ ვალიდური მონაცემები',
+      ),
     }),
     onSubmit: values => {
       onSelectionChange(Number(values.minArea), Number(values.maxArea))
@@ -44,15 +58,16 @@ const Area: React.FC<AreaType> = ({
 
   // Sync local Formik values with parent-selected values (minArea, maxArea)
   useEffect(() => {
-    formik.setFieldValue('minArea', selectedArea.min || '')
-    formik.setFieldValue('maxArea', selectedArea.max || '')
+    formik.setFieldValue('minArea', selectedArea.min || -Infinity)
+    formik.setFieldValue('maxArea', selectedArea.max || Infinity)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedArea])
 
   const error =
     formik.values.minArea &&
     formik.values.maxArea &&
-    (formik.errors.minArea || formik.errors.maxArea)
+    formik.errors.minArea &&
+    formik.errors.maxArea
       ? true
       : false
 
@@ -117,9 +132,7 @@ const Area: React.FC<AreaType> = ({
                       <p
                         key={value}
                         className="cursor-pointer text-sm leading-4 text-[#2D3648]"
-                        onClick={() =>
-                          handleShortcutClick(value * 1000, 'minArea')
-                        }
+                        onClick={() => handleShortcutClick(value, 'minArea')}
                       >
                         {`${value},000 მ`}
                         <sup>2</sup>
@@ -138,9 +151,7 @@ const Area: React.FC<AreaType> = ({
                       <p
                         key={value}
                         className="cursor-pointer text-sm leading-4 text-[#2D3648]"
-                        onClick={() =>
-                          handleShortcutClick(value * 1000, 'maxArea')
-                        }
+                        onClick={() => handleShortcutClick(value, 'maxArea')}
                       >
                         {`${value},000 მ`}
                         <sup>2</sup>

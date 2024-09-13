@@ -22,7 +22,7 @@ const defaultValues: FilterContextType = {
   selectedRegions: [],
   setSelectedRegions: () => {},
 
-  selectedPrice: { min: 0, max: Infinity },
+  selectedPrice: { min: -Infinity, max: Infinity },
   setSelectedPrice: () => {},
 
   selectedArea: { min: 0, max: Infinity },
@@ -44,19 +44,19 @@ export const FilterProvider: React.FC<{ children: ReactNode }> = ({
   const [selectedPrice, setSelectedPrice] = useState<{
     min: number
     max: number
-  }>({ min: 0, max: Infinity })
+  }>({ min: -Infinity, max: Infinity })
   const [selectedArea, setSelectedArea] = useState<{
     min: number
     max: number
-  }>({ min: 0, max: Infinity })
+  }>({ min: -Infinity, max: Infinity })
   const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
 
   const removeSelectedItem = (type: string, value: number | null) => {
     switch (type) {
       case 'removeFilters':
         setSelectedRegions([])
-        setSelectedPrice({ min: 0, max: Infinity })
-        setSelectedArea({ min: 0, max: Infinity })
+        setSelectedPrice({ min: -Infinity, max: Infinity })
+        setSelectedArea({ min: -Infinity, max: Infinity })
         setSelectedBedrooms([])
         break
       case 'region':
