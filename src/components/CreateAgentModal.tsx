@@ -172,7 +172,6 @@ const CreateAgentModal: React.FC<{
               textColor={'#F93B1D'}
               text={'გაუქმება'}
             />
-            <button type="submit">SUbmit</button>
             <Button
               form={'agent'}
               type={'submit'}

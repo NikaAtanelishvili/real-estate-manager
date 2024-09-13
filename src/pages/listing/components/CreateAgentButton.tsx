@@ -16,9 +16,7 @@ const CreateListingButton: React.FC = () => {
         onClick={openModal}
       >
         <PlusSvg color={'#F93B1D'} />
-        <p className="font-medium leading-5 text-[#F93B1D]">
-          ლისტინგის დამატება
-        </p>
+        <p className="font-medium leading-5 text-[#F93B1D]">აგენტის დამატება</p>
       </button>
       {isModalOpen && <CreateAgentModal closeModal={closeModal} />}
     </div>

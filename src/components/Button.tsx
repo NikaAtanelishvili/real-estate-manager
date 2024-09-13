@@ -5,7 +5,7 @@ interface ButtonProps {
   backgroundColor: string
   text: string
   textColor: string
-  form: string
+  form?: string
   onClick?: () => void
 }
 

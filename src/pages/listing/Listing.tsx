@@ -15,7 +15,7 @@ const Listing: React.FC = () => {
         <div className="px-40">
           <section className="flex justify-between">
             <Filter />
-            <div>
+            <div className="grid grid-cols-2 gap-4">
               <CreateListingButton />
               <CreateAgentButton />
             </div>

@@ -43,7 +43,7 @@ const createFormData = (values: CreateListing) => {
 const CreateListing: React.FC = () => {
   const navigate = useNavigate()
 
-  const VITE_API_TOKEN = import.meta.env.VITE_API_URL
+  const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
 
   const validationSchema = Yup.object({
     is_rental: Yup.number().required(),
