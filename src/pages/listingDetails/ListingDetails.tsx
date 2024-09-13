@@ -13,7 +13,8 @@ import { HeaderLayout } from '@/layouts'
 import { ListingDetailsType } from '@/types'
 import { useNavigate, useParams } from 'react-router-dom'
 import dummyListing from '../listing/dummyListing'
-import { ListingsCarousel } from './components'
+import { DeleteListingModal, ListingsCarousel } from './components'
+import { useState } from 'react'
 
 const DUMMY_LISTING_DETAILS: ListingDetailsType = {
   id: 1,
@@ -51,6 +52,60 @@ const DUMMY_LISTING_DETAILS: ListingDetailsType = {
 
 const ListingDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>() // Get the listing id from the URL
+  const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
+
+  // DELETE LISTING POPUP
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
+  const handleDeleteListing = async () => {
+    try {
+      const response = await fetch(
+        `https://api.real-estate-manager.redberryinternship.ge/api/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${VITE_API_TOKEN}`,
+          },
+        },
+      )
+      switch (response.status) {
+        case 200: {
+          const data = await response.json()
+          closeModal()
+          console.log(data)
+          break
+        }
+
+        case 401: {
+          const error = await response.json()
+          throw new Error(error.message || 'Please provide valid API token')
+        }
+
+        case 404: {
+          const error = await response.json()
+          throw new Error(error.message || 'Real estate not found')
+        }
+
+        case 500: {
+          const error = await response.json()
+          throw new Error(error.message || 'Network response is unavailable')
+        }
+
+        default: {
+          const error = await response.json()
+          throw new Error(
+            error.message || `Unexpected status code: ${response.status}`,
+          )
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   // WORK IN PROGRESS
   const listingDetails = useFetchListingDetails(id!)
@@ -185,6 +240,7 @@ const ListingDetails: React.FC = () => {
                 </div>
                 <div className="flex">
                   <button
+                    onClick={openModal}
                     type="button"
                     className="rounded-lg border border-[#676E76] p-3 text-xs font-medium text-[#676E76]"
                   >
@@ -206,6 +262,12 @@ const ListingDetails: React.FC = () => {
           </ListingsCarousel>
         </section>
       </div>
+      {isModalOpen && (
+        <DeleteListingModal
+          closeModal={closeModal}
+          deleteListing={handleDeleteListing}
+        />
+      )}
     </HeaderLayout>
   )
 }
