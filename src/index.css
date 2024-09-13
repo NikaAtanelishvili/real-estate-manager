@@ -53,3 +53,35 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   appearance: textfield;
 }
+
+input[type='radio'] {
+  appearance: none; /* Remove default radio button */
+  background-color: white;
+  border: 1px solid #021526;
+  width: 20px; /* Size of the outer radio button */
+  height: 20px; /* Size of the outer radio button */
+  border-radius: 50%; /* Make it circular */
+  position: relative;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+input[type='radio']:checked {
+  background-color: white;
+  border-color: #021526;
+}
+
+input[type='radio']:checked::after {
+  content: '';
+  width: 8px; /* Small dot size */
+  height: 8px; /* Small dot size */
+  background-color: #021526; /* Dot color */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%; /* Position at the center vertically */
+  left: 50%; /* Position at the center horizontally */
+  transform: translate(-50%, -50%); /* Perfect centering */
+  display: block;
+}
