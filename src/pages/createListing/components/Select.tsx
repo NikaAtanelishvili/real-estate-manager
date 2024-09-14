@@ -73,7 +73,10 @@ const Select: React.FC<SelectProps> = props => {
           <div className="absolute z-50 flex w-full flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
             {typeof props.openModal === 'function' && (
               <div
-                onClick={props.openModal}
+                onClick={() => {
+                  setIsOpen(false)
+                  props.openModal?.()
+                }}
                 className="flex h-11 cursor-pointer items-center justify-start gap-3 border-t border-[#808A93] px-4 hover:bg-gray-200"
               >
                 <AddSvg />
