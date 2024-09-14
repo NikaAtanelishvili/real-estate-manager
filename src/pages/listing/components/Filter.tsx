@@ -5,28 +5,12 @@ import Area from './Area'
 import Bedrooms from './Bedrooms'
 import { SelectedItem } from '@/components'
 import { FilterContext } from '@/contexts'
+import { RegionType } from '@/types'
 
-const dummyRegions = [
-  { id: 1, name: 'New York' },
-  { id: 2, name: 'Los Angeles' },
-  { id: 3, name: 'Chicago' },
-  { id: 4, name: 'Houston' },
-  { id: 5, name: 'Phoenix' },
-  { id: 6, name: 'Philadelphia' },
-  { id: 7, name: 'San Antonio' },
-  { id: 8, name: 'San Diego' },
-  { id: 9, name: 'Dallas' },
-  { id: 10, name: 'San Jose' },
-  { id: 11, name: 'Austin' },
-  { id: 12, name: 'Jacksonville' },
-  { id: 13, name: 'Fort Worth' },
-  { id: 14, name: 'Columbus' },
-  { id: 15, name: 'Charlotte' },
-]
-
-const dummyBedrooms = [1, 2, 3, 4]
-
-const Filter: React.FC = () => {
+const Filter: React.FC<{
+  regions: RegionType[]
+  bedrooms: number[]
+}> = props => {
   const {
     selectedRegions,
     setSelectedRegions,
@@ -46,11 +30,15 @@ const Filter: React.FC = () => {
     setOpenDropdown(prev => (prev === dropdown ? null : dropdown))
   }
 
+  const selectedRegionsDisplay = props.regions.filter(region =>
+    selectedRegions.includes(region.id),
+  )
+
   return (
     <div className="inline-flex flex-col gap-4">
       <div className="relative inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
         <Region
-          regions={dummyRegions}
+          regions={props.regions}
           isOpen={openDropdown === 'region'}
           toggleDropdown={() => toggleDropdown('region')}
           onSelectionChange={setSelectedRegions}
@@ -71,7 +59,7 @@ const Filter: React.FC = () => {
         <Bedrooms
           isOpen={openDropdown === 'bedrooms'}
           toggleDropdown={() => toggleDropdown('bedrooms')}
-          bedrooms={dummyBedrooms}
+          bedrooms={props.bedrooms}
           onSelectionChange={setSelectedBedrooms}
           selectedBedrooms={selectedBedrooms}
         />
@@ -80,11 +68,11 @@ const Filter: React.FC = () => {
       {/* Display Selected Filters */}
       <div className="flex flex-wrap items-center gap-2">
         {/* Display selected regions */}
-        {selectedRegions.map(region => (
+        {selectedRegionsDisplay.map(region => (
           <SelectedItem
-            key={region}
-            label={region}
-            onRemove={() => removeSelectedItem('region', region)}
+            key={region.id}
+            label={region.name}
+            onRemove={() => removeSelectedItem('region', region.id)}
           />
         ))}
 
@@ -120,14 +108,22 @@ const Filter: React.FC = () => {
             onRemove={() => removeSelectedItem('bedrooms', bedroom)}
           />
         ))}
-        <div
-          className="cursor-pointer"
-          onClick={() => removeSelectedItem('removeFilters', null)}
-        >
-          <p className="text-sm font-medium leading-4 text-[#021526]">
-            გასუფთავება
-          </p>
-        </div>
+
+        {(selectedRegions.length > 0 ||
+          selectedPrice.min !== -Infinity ||
+          selectedPrice.max !== Infinity ||
+          selectedArea.min !== -Infinity ||
+          selectedArea.max !== Infinity ||
+          selectedBedrooms.length > 0) && (
+          <div
+            className="cursor-pointer"
+            onClick={() => removeSelectedItem('removeFilters', null)}
+          >
+            <p className="font-FiraGO text-sm font-medium leading-4 text-[#021526]">
+              გასუფთავება
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
