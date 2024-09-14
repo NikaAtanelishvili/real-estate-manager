@@ -4,9 +4,10 @@ import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { RadioButton, Select, Textarea } from './components'
-import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useFetchAgents } from '@/hooks'
+import { dummy_cities, dummy_regions } from './dummyData'
 
 interface CreateListing {
   is_rental: number
@@ -42,6 +43,11 @@ const createFormData = (values: CreateListing) => {
 
 const CreateListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { agents, fetchAgents } = useFetchAgents()
+
+  useEffect(() => {
+    fetchAgents()
+  }, [fetchAgents])
 
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
@@ -295,7 +301,7 @@ const CreateListing: React.FC = () => {
                 id={'agent'}
                 label={'აირჩიე'}
                 formik={formik}
-                options={dummy_agents}
+                options={agents}
                 openModal={openModal}
               />
             </div>
