@@ -3,11 +3,11 @@ import { FilterContext } from '@/contexts'
 import { CardProps } from '@/types'
 import { useContext } from 'react'
 
-const ListingGrid: React.FC<{ listrings: CardProps[] }> = props => {
+const ListingGrid: React.FC<{ listings: CardProps[] | [] }> = props => {
   const { selectedRegions, selectedPrice, selectedArea, selectedBedrooms } =
     useContext(FilterContext)
 
-  const filteredListings = props.listrings.filter(listing => {
+  const filteredListings = props.listings.filter(listing => {
     if (
       selectedRegions.length > 0 &&
       !selectedRegions.includes(listing.city.region_id)

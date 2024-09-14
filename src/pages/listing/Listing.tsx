@@ -5,10 +5,17 @@ import {
   Filter,
   ListingGrid,
 } from './components'
-import dummyListing from './dummyListing'
 import { FilterProvider } from '@/contexts'
+import { useEffect } from 'react'
+import { useFetchListings } from '@/hooks'
 
 const Listing: React.FC = () => {
+  const { listings, fetchListings } = useFetchListings()
+
+  useEffect(() => {
+    fetchListings()
+  }, [fetchListings])
+
   return (
     <FilterProvider>
       <HeaderLayout>
@@ -21,7 +28,7 @@ const Listing: React.FC = () => {
             </div>
           </section>
           <section>
-            <ListingGrid listrings={dummyListing} />
+            <ListingGrid listings={listings || []} />
           </section>
         </div>
       </HeaderLayout>
