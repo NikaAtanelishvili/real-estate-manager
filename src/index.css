@@ -1,12 +1,12 @@
-@import url('https://free.bboxtype.com/embedfonts/?family=FiraGO:500');
+@import url('https://free.bboxtype.com/embedfonts/?family=FiraGO:400,500,700');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  @apply font-FiraGO;
-  background-color: #fff;
+  font-family: 'FiraGO', sans-serif;
+  font-weight: 400; /* Base weight */
 }
 
 @font-face {

@@ -4,8 +4,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        FiraGO: ['FiraGO', 'sans-serif'], // add your custom font
+        FiraGO: ['FiraGO', 'sans-serif'],
         Helvetica: ['Helvetica', 'system-ui', 'sans-serif'],
+      },
+      fontWeight: {
+        regular: 400,
+        medium: 500,
+        bold: 700,
       },
     },
   },
