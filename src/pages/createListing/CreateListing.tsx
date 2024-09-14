@@ -6,8 +6,7 @@ import * as Yup from 'yup'
 import { RadioButton, Select, Textarea } from './components'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useFetchAgents } from '@/hooks'
-import { dummy_cities, dummy_regions } from './dummyData'
+import { useFetchAgents, useFetchCities, useFetchRegions } from '@/hooks'
 
 interface CreateListing {
   is_rental: number
@@ -44,10 +43,20 @@ const createFormData = (values: CreateListing) => {
 const CreateListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { agents, fetchAgents } = useFetchAgents()
+  const { regions, fetchRegions } = useFetchRegions()
+  const { cities, fetchCities } = useFetchCities()
 
   useEffect(() => {
     fetchAgents()
   }, [fetchAgents])
+
+  useEffect(() => {
+    fetchRegions()
+  }, [fetchRegions])
+
+  useEffect(() => {
+    fetchCities()
+  }, [fetchCities])
 
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
@@ -169,10 +178,9 @@ const CreateListing: React.FC = () => {
     },
   })
 
-  const filtered_dummy_cities = useMemo(
-    () =>
-      dummy_cities.filter(city => city.region_id == formik.values.region.id),
-    [formik.values.region.id],
+  const filteredCities = useMemo(
+    () => cities.filter(city => city.region_id == formik.values.region.id),
+    [cities, formik.values.region.id],
   )
 
   return (
@@ -234,14 +242,14 @@ const CreateListing: React.FC = () => {
                 id={'region'}
                 label={'რეგიონი'}
                 formik={formik}
-                options={dummy_regions}
+                options={regions}
               />
               {formik.values.region.name && (
                 <Select
                   id={'city'}
                   label={'ქალაქი'}
                   formik={formik}
-                  options={filtered_dummy_cities}
+                  options={filteredCities}
                 />
               )}
             </div>
