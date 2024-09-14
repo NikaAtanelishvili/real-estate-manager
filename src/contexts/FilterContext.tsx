@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react'
+import { createContext, useState, ReactNode, useEffect } from 'react'
 
 // shape of your filter context
 interface FilterContextType {
@@ -40,16 +40,117 @@ export const FilterContext = createContext<FilterContextType>(defaultValues)
 export const FilterProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [selectedRegions, setSelectedRegions] = useState<number[]>([])
+  const [selectedRegions, setSelectedRegions] = useState<number[]>(() => {
+    const storedRegions = localStorage.getItem('selectedRegions')
+    return storedRegions ? JSON.parse(storedRegions) : []
+  })
+
+  //=======================Handling Special Values (e.g., Infinity)====================
+  // Loading selectedPrice with Infinity handling
   const [selectedPrice, setSelectedPrice] = useState<{
     min: number
     max: number
-  }>({ min: -Infinity, max: Infinity })
+  }>(() => {
+    const storedPrice = localStorage.getItem('selectedPrice')
+    if (storedPrice) {
+      const parsedPrice = JSON.parse(storedPrice)
+      return {
+        min:
+          parsedPrice.min === 'Infinity'
+            ? Infinity
+            : parsedPrice.min === '-Infinity'
+              ? -Infinity
+              : parsedPrice.min,
+        max:
+          parsedPrice.max === 'Infinity'
+            ? Infinity
+            : parsedPrice.max === '-Infinity'
+              ? -Infinity
+              : parsedPrice.max,
+      }
+    }
+    return { min: -Infinity, max: Infinity }
+  })
+
+  //=======================Handling Special Values (e.g., Infinity)====================
+  // Loading selectedArea with Infinity handling
   const [selectedArea, setSelectedArea] = useState<{
     min: number
     max: number
-  }>({ min: -Infinity, max: Infinity })
-  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
+  }>(() => {
+    const storedArea = localStorage.getItem('selectedArea')
+    if (storedArea) {
+      const parsedArea = JSON.parse(storedArea)
+      return {
+        min:
+          parsedArea.min === 'Infinity'
+            ? Infinity
+            : parsedArea.min === '-Infinity'
+              ? -Infinity
+              : parsedArea.min,
+        max:
+          parsedArea.max === 'Infinity'
+            ? Infinity
+            : parsedArea.max === '-Infinity'
+              ? -Infinity
+              : parsedArea.max,
+      }
+    }
+    return { min: -Infinity, max: Infinity }
+  })
+
+  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>(() => {
+    const storedBedrooms = localStorage.getItem('selectedBedrooms')
+    return storedBedrooms ? JSON.parse(storedBedrooms) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions))
+  }, [selectedRegions])
+
+  //=======================Handling Special Values (e.g., Infinity)====================
+  // Saving selectedPrice with Infinity handling
+  useEffect(() => {
+    const priceToStore = {
+      min:
+        selectedPrice.min === Infinity
+          ? 'Infinity'
+          : selectedPrice.min === -Infinity
+            ? '-Infinity'
+            : selectedPrice.min,
+      max:
+        selectedPrice.max === Infinity
+          ? 'Infinity'
+          : selectedPrice.max === -Infinity
+            ? '-Infinity'
+            : selectedPrice.max,
+    }
+    localStorage.setItem('selectedPrice', JSON.stringify(priceToStore))
+  }, [selectedPrice])
+
+  //=======================Handling Special Values (e.g., Infinity)====================
+  // Saving selectedArea with Infinity handling
+  useEffect(() => {
+    const areaToStore = {
+      min:
+        selectedArea.min === Infinity
+          ? 'Infinity'
+          : selectedArea.min === -Infinity
+            ? '-Infinity'
+            : selectedArea.min,
+      max:
+        selectedArea.max === Infinity
+          ? 'Infinity'
+          : selectedArea.max === -Infinity
+            ? '-Infinity'
+            : selectedArea.max,
+    }
+    localStorage.setItem('selectedArea', JSON.stringify(areaToStore))
+  }, [selectedArea])
+
+  useEffect(() => {
+    localStorage.setItem('selectedBedrooms', JSON.stringify(selectedBedrooms))
+  }, [selectedBedrooms])
 
   const removeSelectedItem = (type: string, value: number | null) => {
     switch (type) {
@@ -63,10 +164,10 @@ export const FilterProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedRegions(selectedRegions.filter(region => region !== value))
         break
       case 'price':
-        setSelectedPrice({ min: 0, max: Infinity })
+        setSelectedPrice({ min: -Infinity, max: Infinity })
         break
       case 'area':
-        setSelectedArea({ min: 0, max: Infinity })
+        setSelectedArea({ min: -Infinity, max: Infinity })
         break
       case 'bedrooms':
         setSelectedBedrooms(
