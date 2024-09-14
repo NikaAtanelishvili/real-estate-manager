@@ -35,6 +35,7 @@ const Textarea: React.FC<TextareaProps> = props => {
         className={`w-full rounded-md border border-[#808A93] p-2 leading-5 text-[#021526] outline-none ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'}`}
         id={props.id}
         {...props.formik.getFieldProps(props.id)}
+        onFocus={() => props.formik.setFieldTouched(props.id, true)}
       />
 
       <div className="flex items-center gap-1">

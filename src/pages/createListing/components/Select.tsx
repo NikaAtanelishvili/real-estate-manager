@@ -14,8 +14,6 @@ interface SelectProps {
 const Select: React.FC<SelectProps> = props => {
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleToggle = () => setIsOpen(!isOpen)
-
   const handleOptionSelect = (option: AgentType | CityType | RegionType) => {
     props.formik.setFieldValue(props.id, option)
     setIsOpen(!isOpen)
@@ -44,16 +42,35 @@ const Select: React.FC<SelectProps> = props => {
         {props.label}
       </label>
 
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => {
+            setIsOpen(false)
+            props.formik.setFieldTouched(props.id, true)
+          }}
+        ></div>
+      )}
+
       <div className="relative">
         <div
-          onClick={handleToggle}
+          onClick={() => {
+            if (isOpen === false) {
+              props.formik.setFieldTouched(props.id, false)
+              setIsOpen(true)
+            }
+            if (isOpen === true) {
+              props.formik.setFieldTouched(props.id, true)
+              setIsOpen(false)
+            }
+          }}
           className={`flex h-11 w-full items-center justify-between rounded-md border border-[#808A93] px-2 leading-5 text-[#021526] ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'} ${isOpen && 'rounded-b-none border-b-[#FFF]'}`}
         >
           <p>{renderSelectedOption()}</p>
           <OpenSvg />
         </div>
         {isOpen && (
-          <div className="absolute flex w-full flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
+          <div className="absolute z-50 flex w-full flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
             {typeof props.openModal === 'function' && (
               <div
                 onClick={props.openModal}
