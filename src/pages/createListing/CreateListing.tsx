@@ -1,12 +1,44 @@
 import { Button, CreateAgentModal, FileInput, Input } from '@/components'
 import { HeaderLayout } from '@/layouts'
+import { AgentType, CityType, RegionType } from '@/types'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { RadioButton, Select, Textarea } from './components'
 import { dummy_agents, dummy_cities, dummy_regions } from './dummyData'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { createListingFormData } from '@/utils'
+
+interface CreateListing {
+  is_rental: number
+  address: string
+  zip_code: string
+  region: RegionType
+  city: CityType
+  price: string
+  area: string
+  bedrooms: string
+  description: string
+  image: string
+  agent: AgentType
+}
+
+const createFormData = (values: CreateListing) => {
+  const formData = new FormData()
+
+  formData.append('is_rental', values.is_rental.toString())
+  formData.append('address', values.address)
+  formData.append('zip_code', values.zip_code)
+  formData.append('price', values.price)
+  formData.append('area', values.area)
+  formData.append('bedrooms', values.bedrooms)
+  formData.append('description', values.description)
+  formData.append('region_id', values.region.id.toString())
+  formData.append('city_id', values.city.id.toString())
+  formData.append('image', values.image)
+  formData.append('agent_id', values.agent.id.toString())
+
+  return formData
+}
 
 const CreateListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -31,8 +63,8 @@ const CreateListing: React.FC = () => {
       name: Yup.string().required(),
       region_id: Yup.number().required(),
     }).required(),
-    price: Yup.number().min(0).required(),
-    area: Yup.number().min(0).required(),
+    price: Yup.number().required(),
+    area: Yup.number().required(),
     bedrooms: Yup.number().required(),
     description: Yup.string()
       .test('minWords', value => {
@@ -49,41 +81,37 @@ const CreateListing: React.FC = () => {
     }).required(),
   })
 
-  const savedValues = localStorage.getItem('formValues')
-  const initialValues = savedValues
-    ? JSON.parse(savedValues)
-    : {
-        is_rental: 0,
-        address: '',
-        zip_code: '',
-        region: {
-          id: 0,
-          name: '',
-        },
-        city: {
-          id: 0,
-          name: '',
-          region_id: 0,
-        },
-        price: '',
-        area: '',
-        bedrooms: '',
-        description: '',
-        image: '',
-        agent: {
-          surname: '',
-          name: '',
-          avatar: '',
-          id: 0,
-        },
-      }
-
   const formik = useFormik({
-    initialValues,
+    initialValues: {
+      is_rental: 0,
+      address: '',
+      zip_code: '',
+      region: {
+        id: 0,
+        name: '',
+      },
+      city: {
+        id: 0,
+        name: '',
+        region_id: 0,
+      },
+      price: '',
+      area: '',
+      bedrooms: '',
+      description: '',
+      image: '',
+      agent: {
+        surname: '',
+        name: '',
+        avatar: '',
+        id: 0,
+      },
+    } as CreateListing,
+
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const formData = createListingFormData(values)
+        const formData = createFormData(values)
 
         const response = await fetch(
           `https://api.real-estate-manager.redberryinternship.ge/api/real-estates`,
@@ -101,7 +129,6 @@ const CreateListing: React.FC = () => {
           case 201: {
             const data = await response.json()
             console.log(data)
-            handleClearForm()
             navigate('/')
             break
           }
@@ -135,22 +162,6 @@ const CreateListing: React.FC = () => {
       }
     },
   })
-
-  const handleClearForm = () => {
-    formik.resetForm()
-    localStorage.removeItem('formValues')
-  }
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      localStorage.setItem('formValues', JSON.stringify(formik.values))
-    }, 1000)
-
-    // Cleanup function
-    return () => {
-      clearTimeout(handler)
-    }
-  }, [formik.values])
 
   const filtered_dummy_cities = useMemo(
     () =>
@@ -295,10 +306,7 @@ const CreateListing: React.FC = () => {
             <Button
               form={'listing'}
               type={'button'}
-              onClick={() => {
-                handleClearForm()
-                navigate('/')
-              }}
+              onClick={() => navigate('/')}
               backgroundColor={'#FFF'}
               textColor={'#F93B1D'}
               text={'გაუქმება'}
