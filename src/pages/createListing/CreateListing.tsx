@@ -63,8 +63,6 @@ const CreateListing: React.FC = () => {
 
   const navigate = useNavigate()
 
-  const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
-
   const validationSchema = Yup.object({
     is_rental: Yup.number().required(),
     address: Yup.string().min(2).required(),
@@ -135,7 +133,7 @@ const CreateListing: React.FC = () => {
             body: formData,
             headers: {
               Accept: 'application/json',
-              Authorization: `Bearer ${VITE_API_TOKEN}`,
+              Authorization: `Bearer 9cfeab72-0976-4200-8c9c-3d87ddecf868`,
             },
           },
         )

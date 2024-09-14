@@ -40,8 +40,6 @@ const validationSchema = Yup.object({
 const CreateAgentModal: React.FC<{
   closeModal: () => void
 }> = props => {
-  const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN
-
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -62,7 +60,7 @@ const CreateAgentModal: React.FC<{
             body: formData,
             headers: {
               Accept: 'application/json',
-              Authorization: `Bearer ${VITE_API_TOKEN}`,
+              Authorization: `Bearer 9cfeab72-0976-4200-8c9c-3d87ddecf868`,
             },
           },
         )
