@@ -50,3 +50,17 @@ export interface RegionType {
   id: number
   name: string
 }
+
+interface CreateListing {
+  is_rental: number
+  address: string
+  zip_code: string
+  region: RegionType
+  city: CityType
+  price: string
+  area: string
+  bedrooms: string
+  description: string
+  image: string
+  agent: AgentType
+}
