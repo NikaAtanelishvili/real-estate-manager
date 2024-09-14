@@ -13,7 +13,7 @@ import { CreateListing, Listing, ListingDetails } from '@/pages'
 const router = createBrowserRouter(
   createRoutesFromElements([
     <Route path="/" element={<Listing />} />,
-    <Route path="/createListing" element={<CreateListing />} />,
+    <Route path="/create-listing" element={<CreateListing />} />,
     <Route path="/:id" element={<ListingDetails />} />,
   ]),
 )

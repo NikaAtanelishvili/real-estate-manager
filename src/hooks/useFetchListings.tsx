@@ -1,7 +1,8 @@
+import { CardProps } from '@/types'
 import { useState, useCallback } from 'react'
 
 const useFetchListings = () => {
-  const [listings, setListings] = useState([])
+  const [listings, setListings] = useState<CardProps[]>([])
 
   const fetchListings = useCallback(async () => {
     try {

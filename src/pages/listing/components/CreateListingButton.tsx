@@ -7,7 +7,7 @@ const CreateListingButton: React.FC = () => {
   return (
     <button
       type="button"
-      onClick={() => navigate('/createListing')}
+      onClick={() => navigate('/create-listing')}
       className="flex h-[50px] items-center justify-center gap-2 rounded-lg bg-[#F93B1D] px-4"
     >
       <PlusSvg color={'#FFF'} />
