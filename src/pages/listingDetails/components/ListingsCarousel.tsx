@@ -16,7 +16,7 @@ const ListingsCarousel: React.FC<{ children: React.ReactNode }> = props => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    arrows: true,
+    arrows: itemsCount >= 4,
     nextArrow: (
       <div onClick={() => sliderRef.current?.slickNext()}>
         <NextSvg />
@@ -35,13 +35,19 @@ const ListingsCarousel: React.FC<{ children: React.ReactNode }> = props => {
         <h2 className="mx-40 text-3xl font-medium text-[#021526]">
           ბინები მსგავს ლოკაციებზე
         </h2>
-        <Slider className="mx-36" ref={sliderRef} {...settings}>
-          {props.children}
-          {itemsCount < 4 &&
-            [...Array(4 - itemsCount)].map((_, index) => (
-              <div key={`empty-${index}`}></div>
-            ))}
-        </Slider>
+        {itemsCount === 0 ? (
+          <h4 className="mx-40 text-xl leading-6 text-[#021526CC]">
+            არ მოიძებნა
+          </h4>
+        ) : (
+          <Slider className="mx-36" ref={sliderRef} {...settings}>
+            {props.children}
+            {itemsCount < 4 &&
+              [...Array(4 - itemsCount)].map((_, index) => (
+                <div key={`empty-${index}`}></div>
+              ))}
+          </Slider>
+        )}
       </div>
     </section>
   )
