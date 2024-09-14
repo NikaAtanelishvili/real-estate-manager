@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 const DeleteListingModal: React.FC<{
   closeModal: () => void
   deleteListing: () => void
+  loading: boolean
 }> = props => {
   return ReactDOM.createPortal(
     <div
@@ -40,7 +41,7 @@ const DeleteListingModal: React.FC<{
               <Button
                 type={'button'}
                 backgroundColor={'#F93B1D'}
-                text={'დადასტურება'}
+                text={props.loading ? 'დაელოდეთ...' : 'დადასტურება'}
                 textColor={'#FFF'}
                 onClick={props.deleteListing}
               />

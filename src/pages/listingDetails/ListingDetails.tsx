@@ -17,6 +17,7 @@ import { CardProps } from '@/types'
 
 const ListingDetails: React.FC = () => {
   const { id } = useParams()
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
 
@@ -61,6 +62,7 @@ const ListingDetails: React.FC = () => {
   )
 
   const handleDeleteListing = async () => {
+    setLoading(true)
     try {
       const response = await fetch(
         `https://api.real-estate-manager.redberryinternship.ge/api/real-estates/${id}`,
@@ -103,6 +105,8 @@ const ListingDetails: React.FC = () => {
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -251,6 +255,7 @@ const ListingDetails: React.FC = () => {
         <DeleteListingModal
           closeModal={closeModal}
           deleteListing={handleDeleteListing}
+          loading={loading}
         />
       )}
     </HeaderLayout>
