@@ -231,7 +231,7 @@ const ListingDetails: React.FC = () => {
                   <button
                     onClick={openModal}
                     type="button"
-                    className="rounded-lg border border-[#676E76] p-3 text-xs font-medium text-[#676E76]"
+                    className="rounded-lg border border-[#808A93] p-3 text-xs font-medium text-[#808A93] hover:bg-[#808A93] hover:text-white"
                   >
                     ლისთინგის წაშლა
                   </button>

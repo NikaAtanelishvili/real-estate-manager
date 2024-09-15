@@ -96,6 +96,7 @@ const Area: React.FC<AreaType> = ({
             </p>
 
             <form
+              id="area"
               className="flex flex-col gap-6"
               onSubmit={formik.handleSubmit}
             >
@@ -163,8 +164,9 @@ const Area: React.FC<AreaType> = ({
 
               <div className="flex w-full items-center justify-end">
                 <button
+                  form="area"
                   type="submit"
-                  className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white"
+                  className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white hover:bg-[#DF3014]"
                 >
                   არჩევა
                 </button>
