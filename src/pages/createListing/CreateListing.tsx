@@ -22,6 +22,33 @@ interface CreateListing {
   agent: AgentType
 }
 
+const base64ToFile = (base64String: string, fileName: string): File => {
+  const [prefix, base64Data] = base64String.split(',')
+
+  if (!prefix || !base64Data) {
+    throw new Error('Invalid base64 string format.')
+  }
+
+  const byteString = atob(base64Data)
+  const byteNumbers = new Array(byteString.length)
+
+  for (let i = 0; i < byteString.length; i++) {
+    byteNumbers[i] = byteString.charCodeAt(i)
+  }
+
+  const byteArray = new Uint8Array(byteNumbers)
+
+  const mimeTypeMatch = prefix.match(/:(.*?);/)
+  if (!mimeTypeMatch) {
+    throw new Error('Unable to determine MIME type.')
+  }
+  const mimeType = mimeTypeMatch[1]
+
+  const blob = new Blob([byteArray], { type: mimeType })
+
+  return new File([blob], fileName, { type: mimeType })
+}
+
 const createFormData = (values: CreateListing) => {
   const formData = new FormData()
 
@@ -34,14 +61,22 @@ const createFormData = (values: CreateListing) => {
   formData.append('description', values.description)
   formData.append('region_id', values.region.id.toString())
   formData.append('city_id', values.city.id.toString())
-  formData.append('image', values.image)
   formData.append('agent_id', values.agent.id.toString())
+
+  try {
+    const file = base64ToFile(values.image, 'image.jpg') // Ensure file name here is appropriate
+    console.log(file) // Log file to check
+    formData.append('image', file)
+  } catch (error) {
+    console.error('Error converting base64 to file:', error)
+  }
 
   return formData
 }
 
 const CreateListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
   const { agents, fetchAgents } = useFetchAgents()
   const { regions, fetchRegions } = useFetchRegions()
   const { cities, fetchCities } = useFetchCities()
@@ -76,8 +111,8 @@ const CreateListing: React.FC = () => {
       name: Yup.string().required(),
       region_id: Yup.number().required(),
     }).required(),
-    price: Yup.number().required(),
-    area: Yup.number().required(),
+    price: Yup.number().min(0).required(),
+    area: Yup.number().min(0).required(),
     bedrooms: Yup.number().required(),
     description: Yup.string()
       .test('minWords', value => {
@@ -94,36 +129,42 @@ const CreateListing: React.FC = () => {
     }).required(),
   })
 
+  const savedValues = localStorage.getItem('formValues')
+  const initialValues = savedValues
+    ? JSON.parse(savedValues)
+    : {
+        is_rental: 0,
+        address: '',
+        zip_code: '',
+        region: {
+          id: 0,
+          name: '',
+        },
+        city: {
+          id: 0,
+          name: '',
+          region_id: 0,
+        },
+        price: '',
+        area: '',
+        bedrooms: '',
+        description: '',
+        image: '',
+        agent: {
+          surname: '',
+          name: '',
+          avatar: '',
+          id: 0,
+        },
+      }
+
   const formik = useFormik({
-    initialValues: {
-      is_rental: 0,
-      address: '',
-      zip_code: '',
-      region: {
-        id: 0,
-        name: '',
-      },
-      city: {
-        id: 0,
-        name: '',
-        region_id: 0,
-      },
-      price: '',
-      area: '',
-      bedrooms: '',
-      description: '',
-      image: '',
-      agent: {
-        surname: '',
-        name: '',
-        avatar: '',
-        id: 0,
-      },
-    } as CreateListing,
+    initialValues,
 
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
+        console.log(values.image)
         const formData = createFormData(values)
 
         const response = await fetch(
@@ -140,8 +181,7 @@ const CreateListing: React.FC = () => {
 
         switch (response.status) {
           case 201: {
-            const data = await response.json()
-            console.log(data)
+            handleClearForm()
             navigate('/')
             break
           }
@@ -180,6 +220,22 @@ const CreateListing: React.FC = () => {
     () => cities.filter(city => city.region_id == formik.values.region.id),
     [cities, formik.values.region.id],
   )
+
+  const handleClearForm = () => {
+    formik.resetForm()
+    localStorage.removeItem('formValues')
+  }
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      localStorage.setItem('formValues', JSON.stringify(formik.values))
+    }, 1000)
+
+    // Cleanup function
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [formik.values])
 
   return (
     <HeaderLayout>
@@ -318,7 +374,10 @@ const CreateListing: React.FC = () => {
             <Button
               form={'listing'}
               type={'button'}
-              onClick={() => navigate('/')}
+              onClick={() => {
+                handleClearForm()
+                navigate('/')
+              }}
               backgroundColor={'#FFF'}
               textColor={'#F93B1D'}
               text={'გაუქმება'}

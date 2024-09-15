@@ -16,11 +16,14 @@ const Listing: React.FC = () => {
 
   useEffect(() => {
     fetchListings()
+  }, [fetchListings])
 
-    const bedrooms = listings.map(listing => listing.bedrooms)
-
-    setBedrooms(bedrooms)
-  }, [fetchListings, listings])
+  useEffect(() => {
+    if (listings.length > 0) {
+      const bedrooms = listings.map(listing => listing.bedrooms)
+      setBedrooms(bedrooms)
+    }
+  }, [listings])
 
   useEffect(() => {
     fetchRegions()

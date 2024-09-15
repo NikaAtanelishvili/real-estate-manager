@@ -1,6 +1,6 @@
 import { AddSvg, DeleteSvg } from '@/assets'
 import { FormikValues } from 'formik'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 
 interface FileInputProps {
@@ -10,28 +10,28 @@ interface FileInputProps {
 }
 
 const FileInput: React.FC<FileInputProps> = props => {
-  const [selectedFile, setSelectedFile] = useState<File | ''>('')
-  const [preview, setPreview] = useState<string | null>(null) // State for image preview
-
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       props.formik.setFieldTouched(props.id, true)
 
       const file = acceptedFiles[0]
       if (file) {
-        setSelectedFile(file)
-        setPreview(URL.createObjectURL(file)) // Create a preview URL
-        props.formik.setFieldValue(props.id, file)
+        const reader = new FileReader()
+
+        reader.onload = () => {
+          const base64File = reader.result
+
+          props.formik.setFieldValue(props.id, base64File as string)
+        }
+
+        // Read the file as Base64
+        reader.readAsDataURL(file)
       }
     },
     [props.formik, props.id],
   )
 
-  const handleRemoveFile = () => {
-    setSelectedFile('')
-    setPreview(null) // Clear the preview
-    props.formik.setFieldValue(props.id, '')
-  }
+  const handleRemoveFile = () => props.formik.setFieldValue(props.id, '')
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -41,7 +41,7 @@ const FileInput: React.FC<FileInputProps> = props => {
     },
     maxSize: 1048576, // 1 MB in bytes
     maxFiles: 1,
-    disabled: !!selectedFile,
+    disabled: !!props.formik.values[props.id],
   })
 
   return (
@@ -56,8 +56,9 @@ const FileInput: React.FC<FileInputProps> = props => {
       <div
         className={`flex h-32 w-full items-center justify-center rounded-lg border border-dashed border-[#2D3648] ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'}`}
       >
-        {!selectedFile ? (
+        {!props.formik.values[props.id] ? (
           <div
+            onClick={() => console.log('skibidi trallaal')}
             {...getRootProps({
               className: `${isDragActive ? 'bg-[#e7e7e7]' : ''} cursor-pointer flex-col h-full w-full flex items-center justify-center hover:bg-[#e7e7e7]`,
             })}
@@ -68,9 +69,9 @@ const FileInput: React.FC<FileInputProps> = props => {
         ) : (
           <div className="relative">
             {/* Preview image */}
-            {preview && (
+            {props.formik.values[props.id] && (
               <img
-                src={preview}
+                src={props.formik.values[props.id]}
                 alt="preview of your uploaded image"
                 className="aspect-square h-20 rounded-md object-cover"
               />
