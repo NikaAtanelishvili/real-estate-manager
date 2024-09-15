@@ -11,8 +11,8 @@ interface FilterContextType {
   selectedArea: { min: number; max: number }
   setSelectedArea: (area: { min: number; max: number }) => void
 
-  selectedBedrooms: number[]
-  setSelectedBedrooms: (bedrooms: number[]) => void
+  selectedBedrooms: number | null
+  setSelectedBedrooms: (bedrooms: number | null) => void
 
   removeSelectedItem: (type: string, value: number | null) => void
 }
@@ -28,7 +28,7 @@ const defaultValues: FilterContextType = {
   selectedArea: { min: 0, max: Infinity },
   setSelectedArea: () => {},
 
-  selectedBedrooms: [],
+  selectedBedrooms: null,
   setSelectedBedrooms: () => {},
 
   removeSelectedItem: () => {},
@@ -99,10 +99,12 @@ export const FilterProvider: React.FC<{ children: ReactNode }> = ({
     return { min: -Infinity, max: Infinity }
   })
 
-  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>(() => {
-    const storedBedrooms = localStorage.getItem('selectedBedrooms')
-    return storedBedrooms ? JSON.parse(storedBedrooms) : []
-  })
+  const [selectedBedrooms, setSelectedBedrooms] = useState<number | null>(
+    () => {
+      const storedBedrooms = localStorage.getItem('selectedBedrooms')
+      return storedBedrooms ? JSON.parse(storedBedrooms) : null
+    },
+  )
 
   useEffect(() => {
     localStorage.setItem('selectedRegions', JSON.stringify(selectedRegions))
@@ -158,7 +160,7 @@ export const FilterProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedRegions([])
         setSelectedPrice({ min: -Infinity, max: Infinity })
         setSelectedArea({ min: -Infinity, max: Infinity })
-        setSelectedBedrooms([])
+        setSelectedBedrooms(null)
         break
       case 'region':
         setSelectedRegions(selectedRegions.filter(region => region !== value))
@@ -170,9 +172,7 @@ export const FilterProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedArea({ min: -Infinity, max: Infinity })
         break
       case 'bedrooms':
-        setSelectedBedrooms(
-          selectedBedrooms.filter(bedroom => bedroom !== value),
-        )
+        setSelectedBedrooms(null)
         break
       default:
         break

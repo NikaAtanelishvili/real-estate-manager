@@ -6,24 +6,16 @@ import {
   ListingGrid,
 } from './components'
 import { FilterProvider } from '@/contexts'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useFetchListings, useFetchRegions } from '@/hooks'
 
 const Listing: React.FC = () => {
   const { listings, fetchListings } = useFetchListings()
   const { regions, fetchRegions } = useFetchRegions()
-  const [bedrooms, setBedrooms] = useState<number[]>([])
 
   useEffect(() => {
     fetchListings()
   }, [fetchListings])
-
-  useEffect(() => {
-    if (listings.length > 0) {
-      const bedrooms = listings.map(listing => listing.bedrooms)
-      setBedrooms(bedrooms)
-    }
-  }, [listings])
 
   useEffect(() => {
     fetchRegions()
@@ -34,7 +26,7 @@ const Listing: React.FC = () => {
       <HeaderLayout>
         <div className="my-16 flex flex-col gap-7 px-40">
           <section className="flex justify-between">
-            <Filter regions={regions} bedrooms={bedrooms} />
+            <Filter regions={regions} />
             <div className="grid grid-cols-2 gap-4">
               <CreateListingButton />
               <CreateAgentButton />

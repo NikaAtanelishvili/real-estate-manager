@@ -9,7 +9,6 @@ import { RegionType } from '@/types'
 
 const Filter: React.FC<{
   regions: RegionType[]
-  bedrooms: number[]
 }> = props => {
   const {
     selectedRegions,
@@ -59,7 +58,6 @@ const Filter: React.FC<{
         <Bedrooms
           isOpen={openDropdown === 'bedrooms'}
           toggleDropdown={() => toggleDropdown('bedrooms')}
-          bedrooms={props.bedrooms}
           onSelectionChange={setSelectedBedrooms}
           selectedBedrooms={selectedBedrooms}
         />
@@ -101,20 +99,20 @@ const Filter: React.FC<{
         )}
 
         {/* Display selected bedrooms */}
-        {selectedBedrooms.map(bedroom => (
+        {selectedBedrooms && (
           <SelectedItem
-            key={bedroom}
-            label={bedroom}
-            onRemove={() => removeSelectedItem('bedrooms', bedroom)}
+            key={selectedBedrooms}
+            label={selectedBedrooms}
+            onRemove={() => removeSelectedItem('bedrooms', selectedBedrooms)}
           />
-        ))}
+        )}
 
         {(selectedRegions.length > 0 ||
           selectedPrice.min !== -Infinity ||
           selectedPrice.max !== Infinity ||
           selectedArea.min !== -Infinity ||
           selectedArea.max !== Infinity ||
-          selectedBedrooms.length > 0) && (
+          selectedBedrooms !== null) && (
           <div
             className="cursor-pointer"
             onClick={() => removeSelectedItem('removeFilters', null)}

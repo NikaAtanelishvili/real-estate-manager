@@ -4,7 +4,7 @@ import React from 'react'
 
 interface InputProps {
   id: string
-  label: string
+  label?: string
   formik: FormikValues
   type: string
   errorText?: string
@@ -30,15 +30,18 @@ const Input: React.FC<InputProps> = React.memo(
 
     return (
       <div className="flex flex-col gap-1">
-        <label
-          className="text-sm font-medium leading-4 text-[#021526]"
-          htmlFor={props.id}
-        >
-          {props.label}
-        </label>
+        {props.label && (
+          <label
+            className="text-sm font-medium leading-4 text-[#021526]"
+            htmlFor={props.id}
+          >
+            {props.label}
+          </label>
+        )}
 
         <input
-          className={`h-11 w-full rounded-md border border-[#808A93] px-2 leading-5 text-[#021526] outline-none ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'}`}
+          // ${!props.label && 'px-0 text-center'} FOR BEDROOMS FILTER
+          className={`h-11 w-full rounded-md border border-[#808A93] px-2 ${!props.label && 'px-0 text-center'} leading-5 text-[#021526] outline-none ${props.formik.errors[props.id] && props.formik.touched[props.id] && 'border-[#F93B1D]'}`}
           type={props.type}
           id={props.id}
           {...props.formik.getFieldProps(props.id)}
