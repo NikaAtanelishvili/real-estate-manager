@@ -1,50 +1,47 @@
 import { CloseSvg, OpenSvg } from '@/assets'
-import { useCallback, useEffect, useState } from 'react'
+import { Input } from '@/components'
+import { useFormik } from 'formik'
+import { useEffect } from 'react'
+import * as Yup from 'yup'
 
 interface BedroomsType {
   isOpen: boolean
   toggleDropdown: () => void
-  bedrooms: number[]
-  onSelectionChange: (bedrooms: number[]) => void
-  selectedBedrooms: number[]
+  onSelectionChange: (bedrooms: number | null) => void
+  selectedBedrooms: number | null
 }
 
 const Bedrooms: React.FC<BedroomsType> = ({
   isOpen,
   toggleDropdown,
-  bedrooms,
   onSelectionChange,
-  selectedBedrooms: parentSelectedBedrooms,
+  selectedBedrooms,
 }) => {
-  const [selectedBedrooms, setSelectedBedrooms] = useState<number[]>([])
-
   // Sync local selectedBedrooms state with the parent-selectedBedrooms state (THIS IS HELL)
   useEffect(() => {
-    setSelectedBedrooms(parentSelectedBedrooms)
-  }, [parentSelectedBedrooms])
+    formik.setFieldValue('bedrooms', selectedBedrooms)
 
-  const handleCheckboxChange = useCallback(
-    (count: number) => {
-      let updatedBedrooms
-      if (selectedBedrooms.includes(count)) {
-        updatedBedrooms = selectedBedrooms.filter(
-          bedroomCount => bedroomCount !== count,
-        )
-      } else {
-        updatedBedrooms = [...selectedBedrooms, count]
-      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBedrooms])
 
-      setSelectedBedrooms(updatedBedrooms)
-      onSelectionChange(updatedBedrooms)
+  const formik = useFormik({
+    initialValues: {
+      bedrooms: null,
+    } as {
+      bedrooms: number | null
     },
-    [onSelectionChange, selectedBedrooms],
-  )
-
-  const applySelection = () => {
-    onSelectionChange(selectedBedrooms)
-    toggleDropdown()
-    console.log('არჩეული საძინებლების რაოდენობა:', selectedBedrooms)
-  }
+    validationSchema: Yup.object({
+      bedrooms: Yup.number()
+        .typeError('Must be a number')
+        .integer('Must be an integer')
+        .min(1, 'Minimum of 1 bedroom')
+        .nullable(),
+    }),
+    onSubmit: values => {
+      onSelectionChange(Number(values.bedrooms))
+      toggleDropdown() // Close the dropdown after applying
+    },
+  })
 
   return (
     <div>
@@ -67,30 +64,29 @@ const Bedrooms: React.FC<BedroomsType> = ({
             className="fixed inset-0 z-0 bg-transparent"
             onClick={toggleDropdown}
           ></div>
+
           <div className="absolute z-10 mt-4 flex w-auto min-w-max flex-col gap-6 rounded-xl border border-[#DBDBDB] bg-white p-6 shadow-[5px_5px_12px_0px_#02152614]">
             <p className="w-full font-medium leading-5 text-[#021526]">
               საძინებლების რაოდენობა
             </p>
-            <ul className="grid w-full grid-cols-4 gap-x-4 gap-y-4">
-              {bedrooms.map(count => (
-                <li key={count}>
-                  <div
-                    className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-md border border-[#808A93] bg-white text-xs text-[#021526B2] ${selectedBedrooms.includes(count) && 'border-[#F93B1D]'}`}
-                    onClick={() => handleCheckboxChange(count)}
-                  >
-                    <p>{count}</p>
+            <form id="bedrooms" onSubmit={formik.handleSubmit}>
+              <div className="flex w-full flex-col items-center justify-end gap-8">
+                <div className="w-full">
+                  <div className="w-11">
+                    <Input id={'bedrooms'} formik={formik} type={'number'} />
                   </div>
-                </li>
-              ))}
-            </ul>
-            <div className="flex w-full items-center justify-end">
-              <button
-                onClick={applySelection}
-                className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white hover:bg-[#DF3014]"
-              >
-                არჩევა
-              </button>
-            </div>
+                </div>
+                <div className="flex w-full justify-end">
+                  <button
+                    id="price"
+                    type="submit"
+                    className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white hover:bg-[#DF3014]"
+                  >
+                    არჩევა
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </>
       )}

@@ -26,10 +26,7 @@ const ListingGrid: React.FC<{ listings: CardProps[] | [] }> = props => {
       return false
     }
 
-    if (
-      selectedBedrooms.length > 0 &&
-      !selectedBedrooms.includes(listing.bedrooms)
-    ) {
+    if (listing.bedrooms !== selectedBedrooms && selectedBedrooms !== null) {
       return false
     }
 
