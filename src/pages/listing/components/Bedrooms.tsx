@@ -28,6 +28,7 @@ const Bedrooms: React.FC<BedroomsType> = ({
     initialValues: {
       bedrooms: null,
     } as {
+<<<<<<< HEAD
       bedrooms: number | null | string
     },
     // =========TYPING AND THEN DELETING IN INPUT SOMEHOW TURN VALUE INTO EMPTY STRING===========
@@ -36,6 +37,10 @@ const Bedrooms: React.FC<BedroomsType> = ({
         values.bedrooms = null
       }
     },
+=======
+      bedrooms: number | null
+    },
+>>>>>>> b2e29af0846ba49255ecff4f9a2a272671b680c0
     validationSchema: Yup.object({
       bedrooms: Yup.number()
         .typeError('Must be a number')
@@ -44,12 +49,19 @@ const Bedrooms: React.FC<BedroomsType> = ({
         .nullable(),
     }),
     onSubmit: values => {
+<<<<<<< HEAD
       onSelectionChange(values.bedrooms as number)
       toggleDropdown() // Close the dropdown after applying
     },
   })
 
   console.log(formik.values)
+=======
+      onSelectionChange(Number(values.bedrooms))
+      toggleDropdown() // Close the dropdown after applying
+    },
+  })
+>>>>>>> b2e29af0846ba49255ecff4f9a2a272671b680c0
 
   return (
     <div>
