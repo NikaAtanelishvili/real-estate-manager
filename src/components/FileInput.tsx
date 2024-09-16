@@ -37,6 +37,7 @@ const FileInput: React.FC<FileInputProps> = props => {
     onDrop,
     accept: {
       'image/jpeg': [],
+      'image/jpg': [],
       'image/png': [],
     },
     maxSize: 1048576, // 1 MB in bytes

@@ -13,6 +13,33 @@ interface CreateAgent {
   avatar: string
 }
 
+const base64ToFile = (base64String: string, fileName: string): File => {
+  const [prefix, base64Data] = base64String.split(',')
+
+  if (!prefix || !base64Data) {
+    throw new Error('Invalid base64 string format.')
+  }
+
+  const byteString = atob(base64Data)
+  const byteNumbers = new Array(byteString.length)
+
+  for (let i = 0; i < byteString.length; i++) {
+    byteNumbers[i] = byteString.charCodeAt(i)
+  }
+
+  const byteArray = new Uint8Array(byteNumbers)
+
+  const mimeTypeMatch = prefix.match(/:(.*?);/)
+  if (!mimeTypeMatch) {
+    throw new Error('Unable to determine MIME type.')
+  }
+  const mimeType = mimeTypeMatch[1]
+
+  const blob = new Blob([byteArray], { type: mimeType })
+
+  return new File([blob], fileName, { type: mimeType })
+}
+
 const createFormData = (values: CreateAgent) => {
   const formData = new FormData()
 
@@ -20,7 +47,13 @@ const createFormData = (values: CreateAgent) => {
   formData.append('surname', values.surname)
   formData.append('email', values.email)
   formData.append('phone', values.phone)
-  formData.append('avatar', values.avatar)
+
+  try {
+    const file = base64ToFile(values.avatar, 'avatar.jpg') // Ensure file name here is appropriate
+    formData.append('avatar', file)
+  } catch (error) {
+    console.error('Error converting base64 to file:', error)
+  }
 
   return formData
 }
@@ -60,7 +93,7 @@ const CreateAgentModal: React.FC<{
             body: formData,
             headers: {
               Accept: 'application/json',
-              Authorization: `Bearer 9cfeab72-0976-4200-8c9c-3d87ddecf868`,
+              Authorization: `Bearer 9d05d85b-41d1-4d0d-9779-85c35560821f`,
             },
           },
         )
