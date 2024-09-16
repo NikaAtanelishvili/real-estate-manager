@@ -174,7 +174,7 @@ const CreateListing: React.FC = () => {
             body: formData,
             headers: {
               Accept: 'application/json',
-              Authorization: `Bearer 9cfeab72-0976-4200-8c9c-3d87ddecf868`,
+              Authorization: `Bearer 9d05d85b-41d1-4d0d-9779-85c35560821f`,
             },
           },
         )
