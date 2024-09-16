@@ -9,6 +9,7 @@ interface SelectProps {
   formik: FormikValues
   options: AgentType[] | CityType[] | RegionType[]
   openModal?: () => void
+  customHandleOptionSelect?: () => void
 }
 
 const Select: React.FC<SelectProps> = props => {
@@ -16,6 +17,7 @@ const Select: React.FC<SelectProps> = props => {
 
   const handleOptionSelect = (option: AgentType | CityType | RegionType) => {
     props.formik.setFieldValue(props.id, option)
+    props.customHandleOptionSelect?.()
     setIsOpen(!isOpen)
   }
 
