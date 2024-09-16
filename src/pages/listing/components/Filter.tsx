@@ -35,7 +35,9 @@ const Filter: React.FC<{
 
   return (
     <div className="inline-flex flex-col gap-4">
-      <div className="relative z-10 inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1">
+      <div
+        className={`relative ${openDropdown && 'z-10'} inline-flex gap-x-6 rounded-xl border border-[#DBDBDB] p-1`}
+      >
         <Region
           regions={props.regions}
           isOpen={openDropdown === 'region'}
