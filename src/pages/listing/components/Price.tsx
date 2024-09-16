@@ -90,7 +90,7 @@ const Price: React.FC<PriceType> = ({
         <>
           {/* TRANSPARENT BACKGROUND! WHEN USER CLICKS OUTSIDE OF DROPDOWN IT CLOSES */}
           <div
-            className="fixed inset-0 z-0 bg-transparent"
+            className="fixed inset-0 -z-10 bg-transparent"
             onClick={toggleDropdown}
           ></div>
           <div className="absolute z-10 mt-4 flex w-auto min-w-max flex-col gap-6 rounded-xl border border-[#DBDBDB] bg-white p-6 shadow-[5px_5px_12px_0px_#02152614]">

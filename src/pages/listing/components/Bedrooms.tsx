@@ -67,7 +67,7 @@ const Bedrooms: React.FC<BedroomsType> = ({
         <>
           {/* TRANSPARENT BACKGROUND! WHEN USER CLICKS OUTSIDE OF DROPDOWN IT CLOSES */}
           <div
-            className="fixed inset-0 z-0 bg-transparent"
+            className="fixed inset-0 -z-10 bg-transparent"
             onClick={toggleDropdown}
           ></div>
 
