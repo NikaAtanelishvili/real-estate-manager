@@ -24,10 +24,6 @@ const Input: React.FC<InputProps> = React.memo(
       color = '#45A849'
     }
 
-    if (props.formik.values[props.id]) {
-      props.formik.setFieldTouched(props.id, true)
-    }
-
     return (
       <div className="flex flex-col gap-1">
         {props.label && (

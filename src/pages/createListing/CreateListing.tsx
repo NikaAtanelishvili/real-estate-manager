@@ -65,7 +65,6 @@ const createFormData = (values: CreateListing) => {
 
   try {
     const file = base64ToFile(values.image, 'image.jpg') // Ensure file name here is appropriate
-    console.log(file) // Log file to check
     formData.append('image', file)
   } catch (error) {
     console.error('Error converting base64 to file:', error)
@@ -73,6 +72,37 @@ const createFormData = (values: CreateListing) => {
 
   return formData
 }
+
+const validationSchema = Yup.object({
+  is_rental: Yup.number().required(),
+  address: Yup.string().min(2).required(),
+  zip_code: Yup.number().required(),
+  region: Yup.object({
+    id: Yup.number().required(),
+    name: Yup.string().required(),
+  }).required(),
+  city: Yup.object({
+    id: Yup.number().required(),
+    name: Yup.string().required(),
+    region_id: Yup.number().required(),
+  }).required(),
+  price: Yup.number().min(0).required(),
+  area: Yup.number().min(0).required(),
+  bedrooms: Yup.number().required(),
+  description: Yup.string()
+    .test('minWords', value => {
+      if (!value) return true
+      return value.split(' ').filter(Boolean).length >= 5
+    })
+    .required(),
+  image: Yup.string().required(),
+  agent: Yup.object({
+    surname: Yup.string().required(),
+    name: Yup.string().required(),
+    avatar: Yup.string().required(),
+    id: Yup.number().required(),
+  }).required(),
+})
 
 const CreateListing: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -98,73 +128,64 @@ const CreateListing: React.FC = () => {
 
   const navigate = useNavigate()
 
-  const validationSchema = Yup.object({
-    is_rental: Yup.number().required(),
-    address: Yup.string().min(2).required(),
-    zip_code: Yup.number().required(),
-    region: Yup.object({
-      id: Yup.number().required(),
-      name: Yup.string().required(),
-    }).required(),
-    city: Yup.object({
-      id: Yup.number().required(),
-      name: Yup.string().required(),
-      region_id: Yup.number().required(),
-    }).required(),
-    price: Yup.number().min(0).required(),
-    area: Yup.number().min(0).required(),
-    bedrooms: Yup.number().required(),
-    description: Yup.string()
-      .test('minWords', value => {
-        if (!value) return true
-        return value.split(' ').filter(Boolean).length >= 5
-      })
-      .required(),
-    image: Yup.string().required(),
-    agent: Yup.object({
-      surname: Yup.string().required(),
-      name: Yup.string().required(),
-      avatar: Yup.string().required(),
-      id: Yup.number().required(),
-    }).required(),
-  })
+  const initialValues = useMemo(() => {
+    const savedValues = localStorage.getItem('formValues')
+    return savedValues
+      ? JSON.parse(savedValues)
+      : {
+          is_rental: 0,
+          address: '',
+          zip_code: '',
+          region: {
+            id: 0,
+            name: '',
+          },
+          city: {
+            id: 0,
+            name: '',
+            region_id: 0,
+          },
+          price: '',
+          area: '',
+          bedrooms: '',
+          description: '',
+          image: '',
+          agent: {
+            surname: '',
+            name: '',
+            avatar: '',
+            id: 0,
+          },
+        }
+  }, [])
 
-  const savedValues = localStorage.getItem('formValues')
-  const initialValues = savedValues
-    ? JSON.parse(savedValues)
-    : {
-        is_rental: 0,
-        address: '',
-        zip_code: '',
-        region: {
-          id: 0,
-          name: '',
-        },
-        city: {
-          id: 0,
-          name: '',
-          region_id: 0,
-        },
-        price: '',
-        area: '',
-        bedrooms: '',
-        description: '',
-        image: '',
-        agent: {
-          surname: '',
-          name: '',
-          avatar: '',
-          id: 0,
-        },
+  const initialTouched = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const touched: any = {}
+    Object.keys(initialValues).forEach(key => {
+      if (
+        typeof initialValues[key] === 'object' &&
+        initialValues[key] !== null
+      ) {
+        // Handle nested objects
+        Object.keys(initialValues[key]).forEach(nestedKey => {
+          touched[`${key}.${nestedKey}`] = Boolean(
+            initialValues[key][nestedKey],
+          )
+        })
+      } else {
+        touched[key] = Boolean(initialValues[key])
       }
+    })
+    return touched
+  }, [initialValues])
 
   const formik = useFormik({
     initialValues,
-
     validationSchema,
+    initialTouched,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        console.log(values.image)
         const formData = createFormData(values)
 
         const response = await fetch(
@@ -297,6 +318,9 @@ const CreateListing: React.FC = () => {
                 label={'რეგიონი'}
                 formik={formik}
                 options={regions}
+                customHandleOptionSelect={() =>
+                  formik.setFieldValue('city', '')
+                }
               />
               {formik.values.region.name && (
                 <Select

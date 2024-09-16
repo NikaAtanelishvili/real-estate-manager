@@ -100,8 +100,6 @@ const CreateAgentModal: React.FC<{
 
         switch (response.status) {
           case 201: {
-            const data = await response.json()
-            console.log(data)
             props.closeModal()
             break
           }
@@ -135,8 +133,6 @@ const CreateAgentModal: React.FC<{
       }
     },
   })
-
-  console.log(formik)
 
   return ReactDOM.createPortal(
     <div
