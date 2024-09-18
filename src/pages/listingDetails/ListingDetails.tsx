@@ -144,8 +144,10 @@ const ListingDetails: React.FC = () => {
 
             <div className="flex flex-col gap-6 px-16 pt-7">
               <h1 className="text-5xl font-bold leading-[60px] text-[#021526]">
-                {listingDetails.price}
-                {' ₾'}
+                {Number(listingDetails.price)
+                  .toLocaleString('en-US', { useGrouping: true })
+                  .replace(/,/g, ' ')}{' '}
+                ₾
               </h1>
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-1">

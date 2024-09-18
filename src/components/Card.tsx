@@ -27,7 +27,10 @@ const Card: React.FC<CardProps> = props => {
       <div className="flex flex-col gap-5 rounded-b-2xl border border-t-0 border-[#DBDBDB] p-6">
         {/* price */}
         <p className="text-3xl font-bold leading-8 text-[#021526]">
-          {props.price} ₾
+          {Number(props.price)
+            .toLocaleString('en-US', { useGrouping: true })
+            .replace(/,/g, ' ')}{' '}
+          ₾
         </p>
 
         {/* address */}

@@ -140,7 +140,7 @@ const Price: React.FC<PriceType> = ({
                           handleShortcutClick(value * 1000, 'minPrice')
                         }
                       >
-                        {`${value},000 ₾`}
+                        {`${value} 000 ₾`}
                       </p>
                     ))}
                   </div>
@@ -160,7 +160,7 @@ const Price: React.FC<PriceType> = ({
                           handleShortcutClick(value * 1000, 'maxPrice')
                         }
                       >
-                        {`${value},000 ₾`}
+                        {`${value} 000 ₾`}
                       </p>
                     ))}
                   </div>
