@@ -8,29 +8,58 @@ const ListingGrid: React.FC<{ listings: CardProps[] | [] }> = props => {
     useContext(FilterContext)
 
   const filteredListings = props.listings.filter(listing => {
-    if (
-      selectedRegions.length > 0 &&
-      !selectedRegions.includes(listing.city.region_id)
-    ) {
-      return false
+    let matchesAtLeastOne = false
+    let hasActiveFilter = false
+
+    const DEFAULT_RANGE_VALUES = { min: -Infinity, max: Infinity }
+
+    if (selectedRegions.length > 0) {
+      hasActiveFilter = true
+      if (selectedRegions.includes(listing.city.region_id)) {
+        matchesAtLeastOne = true
+      }
     }
 
     if (
-      listing.price < selectedPrice.min ||
-      listing.price > selectedPrice.max
+      selectedPrice.min !== DEFAULT_RANGE_VALUES.min ||
+      selectedPrice.max !== DEFAULT_RANGE_VALUES.max
     ) {
-      return false
+      hasActiveFilter = true
+      if (
+        listing.price >= selectedPrice.min &&
+        listing.price <= selectedPrice.max
+      ) {
+        matchesAtLeastOne = true
+      }
     }
 
-    if (listing.area < selectedArea.min || listing.area > selectedArea.max) {
-      return false
+    if (
+      selectedArea.min !== DEFAULT_RANGE_VALUES.min ||
+      selectedArea.max !== DEFAULT_RANGE_VALUES.max
+    ) {
+      hasActiveFilter = true
+      if (
+        listing.area >= selectedArea.min &&
+        listing.area <= selectedArea.max
+      ) {
+        matchesAtLeastOne = true
+      }
     }
 
-    if (listing.bedrooms !== selectedBedrooms && selectedBedrooms !== null) {
-      return false
+    if (selectedBedrooms !== null) {
+      hasActiveFilter = true
+      if (listing.bedrooms === selectedBedrooms) {
+        matchesAtLeastOne = true
+      }
     }
 
-    return true
+    // If no filters are active, include all listings
+    if (!hasActiveFilter) {
+      return true
+    }
+
+    // Include listing if it matches at least one active filter
+    return matchesAtLeastOne
   })
 
   return (
