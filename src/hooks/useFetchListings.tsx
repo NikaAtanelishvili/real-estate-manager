@@ -20,7 +20,6 @@ const useFetchListings = () => {
       switch (response.status) {
         case 200: {
           const data = await response.json()
-          console.log(data)
           setListings(data)
           break
         }

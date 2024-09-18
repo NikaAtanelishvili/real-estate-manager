@@ -51,7 +51,96 @@ const ListingDetails: React.FC = () => {
 
   // Early return while data is loading
   if (!listingDetails || !listings) {
-    return <p>Loading listing details...</p>
+    return (
+      <HeaderLayout>
+        <div className="my-16 flex flex-col gap-14">
+          <section className="mx-40">
+            {/* back button */}
+            <div className="mb-7 cursor-pointer">
+              <div className="h-8 w-8 animate-pulse rounded-full bg-gray-200" />
+            </div>
+
+            {/* details */}
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <div className="flex flex-col">
+                <div
+                  className="relative animate-pulse overflow-hidden rounded-2xl bg-gray-200"
+                  style={{ aspectRatio: '839 / 670' }}
+                ></div>
+                <p className="animate-pulse p-3 text-right text-gray-200">
+                  {'გამოქვეყნების თარიღი '}
+                  <span className="inline-block h-4 w-24 rounded-full bg-gray-200" />
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-6 px-16 pt-7">
+                <div className="h-10 w-36 animate-pulse rounded-lg bg-gray-200"></div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-1">
+                    <div className="h-[22px] w-[22px] animate-pulse rounded-full bg-gray-200"></div>
+                    <p className="h-6 w-24 animate-pulse rounded-lg bg-gray-200"></p>
+                    <p className="h-6 w-40 animate-pulse rounded-lg bg-gray-200"></p>
+                  </div>
+
+                  <div className="inline-flex items-center gap-1">
+                    <div className="h-[22px] w-[22px] animate-pulse rounded-full bg-gray-200"></div>
+                    <p className="h-6 w-24 animate-pulse rounded-lg bg-gray-200"></p>
+                  </div>
+
+                  <div className="inline-flex items-center gap-1">
+                    <div className="h-[22px] w-[22px] animate-pulse rounded-full bg-gray-200"></div>
+                    <p className="h-6 w-24 animate-pulse rounded-lg bg-gray-200"></p>
+                  </div>
+
+                  <div className="inline-flex items-center gap-1">
+                    <div className="h-[22px] w-[22px] animate-pulse rounded-full bg-gray-200"></div>
+                    <p className="h-6 w-40 animate-pulse rounded-lg bg-gray-200"></p>
+                  </div>
+                </div>
+
+                <p className="h-12 animate-pulse rounded-lg bg-gray-200 leading-7 text-gray-200"></p>
+
+                <div className="flex flex-col gap-5">
+                  <div className="flex flex-col gap-4 rounded-lg border border-[#DBDBDB] p-5">
+                    <div className="flex items-center gap-4">
+                      <div className="h-20 w-20 animate-pulse rounded-full bg-gray-200"></div>
+                      <div className="flex flex-col gap-1">
+                        <p className="h-6 w-32 animate-pulse rounded-lg bg-gray-200"></p>
+                        <p className="h-4 w-20 animate-pulse rounded-lg bg-gray-200"></p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div className="h-4 w-40 animate-pulse rounded-lg bg-gray-200"></div>
+                      <div className="h-4 w-40 animate-pulse rounded-lg bg-gray-200"></div>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <div className="h-10 w-32 animate-pulse rounded-lg bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* carousel */}
+          <section>
+            <div className="flex justify-center gap-4">
+              {[...Array(4)].map((_, index) => (
+                <div key={index} className="w-96 px-4">
+                  <div className="h-40 w-full animate-pulse rounded-lg bg-gray-200"></div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {isModalOpen && (
+          <div className="modal">
+            <div className="h-full w-full animate-pulse rounded-lg bg-gray-200"></div>
+          </div>
+        )}
+      </HeaderLayout>
+    )
   }
 
   // Filter related listings based on region ID
@@ -129,6 +218,7 @@ const ListingDetails: React.FC = () => {
                 <img
                   className="h-full w-full rounded-2xl object-cover"
                   src={listingDetails.image}
+                  alt="real estate's interior"
                 />
                 <div className="absolute left-10 top-10 flex items-center justify-center rounded-2xl bg-[#02152680] p-2">
                   <p className="text-xl font-medium leading-6 text-white">

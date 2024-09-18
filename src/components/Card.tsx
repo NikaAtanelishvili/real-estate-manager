@@ -17,6 +17,7 @@ const Card: React.FC<CardProps> = props => {
         <img
           className="h-full w-full rounded-t-2xl object-cover"
           src={props.image}
+          alt="real estate's interior"
         />
         <div className="absolute left-6 top-6 flex items-center justify-center rounded-2xl bg-[#02152680] p-2">
           <p className="text-xs font-medium text-white">
