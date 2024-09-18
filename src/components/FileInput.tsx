@@ -1,4 +1,4 @@
-import { AddSvg, DeleteSvg } from '@/assets'
+import { AddSvg, DeleteSvg, TickSvg } from '@/assets'
 import { FormikValues } from 'formik'
 import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -10,6 +10,18 @@ interface FileInputProps {
 }
 
 const FileInput: React.FC<FileInputProps> = props => {
+  let color = '#021526'
+
+  // ERROR (RED)
+  if (props.formik.touched[props.id] && props.formik.errors[props.id]) {
+    color = '#F93B1D'
+  }
+
+  // SUCCESS (GREEN)
+  if (props.formik.touched[props.id] && !props.formik.errors[props.id]) {
+    color = '#45A849'
+  }
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       props.formik.setFieldTouched(props.id, true)
@@ -59,7 +71,6 @@ const FileInput: React.FC<FileInputProps> = props => {
       >
         {!props.formik.values[props.id] ? (
           <div
-            onClick={() => console.log('skibidi trallaal')}
             {...getRootProps({
               className: `${isDragActive ? 'bg-[#e7e7e7]' : ''} cursor-pointer flex-col h-full w-full flex items-center justify-center hover:bg-[#e7e7e7]`,
             })}
@@ -86,6 +97,12 @@ const FileInput: React.FC<FileInputProps> = props => {
             </div>
           </div>
         )}
+      </div>
+      <div className="flex items-center gap-1">
+        <TickSvg color={color} />
+        <p style={{ color: color }} className={`text-sm leading-4`}>
+          სურათი და არ უნდა აღემატებოდეს 1mb-ის ზომაში
+        </p>
       </div>
     </div>
   )
