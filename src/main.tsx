@@ -9,13 +9,16 @@ import {
 } from 'react-router-dom'
 
 import { CreateListing, Listing, ListingDetails } from '@/pages'
+import { RootLayout } from './layouts'
 
 const router = createBrowserRouter(
-  createRoutesFromElements([
-    <Route path="/" element={<Listing />} />,
-    <Route path="/create-listing" element={<CreateListing />} />,
-    <Route path="/:id" element={<ListingDetails />} />,
-  ]),
+  createRoutesFromElements(
+    <Route path="/" element={<RootLayout />}>
+      <Route index element={<Listing />} />
+      <Route path="create-listing" element={<CreateListing />} />
+      <Route path=":id" element={<ListingDetails />} />
+    </Route>,
+  ),
 )
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
