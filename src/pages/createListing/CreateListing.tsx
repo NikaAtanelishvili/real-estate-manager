@@ -129,7 +129,7 @@ const CreateListing: React.FC = () => {
   const navigate = useNavigate()
 
   const initialValues = useMemo(() => {
-    const savedValues = localStorage.getItem('formValues')
+    const savedValues = localStorage.getItem('listringFormValues')
     return savedValues
       ? JSON.parse(savedValues)
       : {
@@ -245,12 +245,12 @@ const CreateListing: React.FC = () => {
 
   const handleClearForm = () => {
     formik.resetForm()
-    localStorage.removeItem('formValues')
+    localStorage.removeItem('listringFormValues')
   }
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      localStorage.setItem('formValues', JSON.stringify(formik.values))
+      localStorage.setItem('listringFormValues', JSON.stringify(formik.values))
     }, 1000)
 
     // Cleanup function

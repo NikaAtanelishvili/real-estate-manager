@@ -4,6 +4,7 @@ import Input from './Input'
 import * as Yup from 'yup'
 import Button from './Button'
 import FileInput from './FileInput'
+import { useEffect, useMemo } from 'react'
 
 interface CreateAgent {
   name: string
@@ -73,15 +74,34 @@ const validationSchema = Yup.object({
 const CreateAgentModal: React.FC<{
   closeModal: () => void
 }> = props => {
+  const initialValues = useMemo(() => {
+    const savedValues = localStorage.getItem('agentFormValues')
+    return savedValues
+      ? JSON.parse(savedValues)
+      : {
+          name: '',
+          surname: '',
+          email: '',
+          avatar: '',
+          phone: '',
+        }
+  }, [])
+
+  const initialTouched = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const touched: any = {}
+    Object.keys(initialValues).forEach(key => {
+      touched[key] = Boolean(initialValues[key])
+    })
+
+    return touched
+  }, [initialValues])
+
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      surname: '',
-      email: '',
-      avatar: '',
-      phone: '',
-    } as CreateAgent,
+    initialValues,
     validationSchema,
+    initialTouched,
+    validateOnMount: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const formData = createFormData(values)
@@ -133,6 +153,22 @@ const CreateAgentModal: React.FC<{
       }
     },
   })
+
+  const handleClearForm = () => {
+    formik.resetForm()
+    localStorage.removeItem('agentFormValues')
+  }
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      localStorage.setItem('agentFormValues', JSON.stringify(formik.values))
+    }, 500)
+
+    // Cleanup function
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [formik.values])
 
   return ReactDOM.createPortal(
     <div
@@ -194,7 +230,10 @@ const CreateAgentModal: React.FC<{
             <Button
               form={'agent'}
               type={'button'}
-              onClick={props.closeModal}
+              onClick={() => {
+                handleClearForm()
+                props.closeModal()
+              }}
               backgroundColor={'#FFF'}
               textColor={'#F93B1D'}
               text={'გაუქმება'}
