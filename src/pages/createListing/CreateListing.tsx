@@ -76,7 +76,7 @@ const createFormData = (values: CreateListing) => {
 const validationSchema = Yup.object({
   is_rental: Yup.number().required(),
   address: Yup.string().min(2).required(),
-  zip_code: Yup.number().required(),
+  zip_code: Yup.number().min(0).required(),
   region: Yup.object({
     id: Yup.number().required(),
     name: Yup.string().required(),
@@ -88,7 +88,7 @@ const validationSchema = Yup.object({
   }).required(),
   price: Yup.number().min(0).required(),
   area: Yup.number().min(0).required(),
-  bedrooms: Yup.number().required(),
+  bedrooms: Yup.number().min(0).required(),
   description: Yup.string()
     .test('minWords', value => {
       if (!value) return true
@@ -184,6 +184,7 @@ const CreateListing: React.FC = () => {
     initialValues,
     validationSchema,
     initialTouched,
+    validateOnMount: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const formData = createFormData(values)
