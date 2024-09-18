@@ -336,8 +336,8 @@ const ListingDetails: React.FC = () => {
         <section>
           <ListingsCarousel>
             {relatedListings.map((listing: CardProps) => (
-              <div className="w-96 px-4">
-                <Card key={listing.id} {...listing} />
+              <div className="w-96 px-4" key={listing.id}>
+                <Card {...listing} />
               </div>
             ))}
           </ListingsCarousel>
