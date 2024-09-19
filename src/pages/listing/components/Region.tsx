@@ -86,6 +86,9 @@ const Region: React.FC<RegionType> = ({
               <button
                 onClick={applySelection}
                 className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white hover:bg-[#DF3014]"
+                style={{
+                  transition: 'background-color 0.2s ease-in-out',
+                }}
               >
                 არჩევა
               </button>

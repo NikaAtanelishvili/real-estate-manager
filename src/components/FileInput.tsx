@@ -72,7 +72,7 @@ const FileInput: React.FC<FileInputProps> = props => {
         {!props.formik.values[props.id] ? (
           <div
             {...getRootProps({
-              className: `${isDragActive ? 'bg-[#e7e7e7]' : ''} cursor-pointer flex-col h-full w-full flex items-center justify-center hover:bg-[#e7e7e7]`,
+              className: `${isDragActive ? 'bg-[#e7e7e7]' : ''} cursor-pointer flex-col h-full w-full flex items-center justify-center transition-colors duration-200 ease-in-out hover:bg-[#eeeeee]`,
             })}
           >
             <input {...getInputProps()} id={props.id} />

@@ -48,6 +48,7 @@ const Button: React.FC<ButtonProps> = props => {
         backgroundColor: hovered
           ? getHoverBackgroundColor()
           : props.backgroundColor,
+        transition: 'background-color 0.2s ease-in-out',
       }}
       className="flex h-[50px] items-center justify-center gap-2 rounded-lg border border-[#F93B1D] px-4"
     >

@@ -7,7 +7,7 @@ const Card: React.FC<CardProps> = props => {
 
   return (
     <div
-      className="flex cursor-pointer flex-col"
+      className="flex cursor-pointer flex-col rounded-2xl shadow-none transition-shadow duration-300 ease-in-out hover:shadow-[5px_5px_12px_0px_#02152614]"
       onClick={() => navigate(`/${props.id}`)}
     >
       <div
