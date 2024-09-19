@@ -324,6 +324,9 @@ const ListingDetails: React.FC = () => {
                     onClick={openModal}
                     type="button"
                     className="rounded-lg border border-[#808A93] p-3 text-xs font-medium text-[#808A93] hover:bg-[#808A93] hover:text-white"
+                    style={{
+                      transition: 'background-color 0.2s ease-in-out',
+                    }}
                   >
                     ლისთინგის წაშლა
                   </button>
@@ -336,8 +339,8 @@ const ListingDetails: React.FC = () => {
         <section>
           <ListingsCarousel>
             {relatedListings.map((listing: CardProps) => (
-              <div className="w-96 px-4">
-                <Card key={listing.id} {...listing} />
+              <div className="w-96 px-4" key={listing.id}>
+                <Card {...listing} />
               </div>
             ))}
           </ListingsCarousel>

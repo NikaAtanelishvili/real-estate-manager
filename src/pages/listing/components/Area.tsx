@@ -11,7 +11,7 @@ interface AreaType {
   selectedArea: { min: number; max: number }
 }
 
-const areaShortcuts = [50, 60, 70, 80, 90]
+const areaShortcuts = [50, 100, 150, 200, 300]
 
 const Area: React.FC<AreaType> = ({
   isOpen,
@@ -135,7 +135,7 @@ const Area: React.FC<AreaType> = ({
                         className="cursor-pointer text-sm leading-4 text-[#2D3648]"
                         onClick={() => handleShortcutClick(value, 'minArea')}
                       >
-                        {`${value},000 მ`}
+                        {`${value} მ`}
                         <sup>2</sup>
                       </p>
                     ))}
@@ -154,7 +154,7 @@ const Area: React.FC<AreaType> = ({
                         className="cursor-pointer text-sm leading-4 text-[#2D3648]"
                         onClick={() => handleShortcutClick(value, 'maxArea')}
                       >
-                        {`${value},000 მ`}
+                        {`${value} მ`}
                         <sup>2</sup>
                       </p>
                     ))}
@@ -167,6 +167,9 @@ const Area: React.FC<AreaType> = ({
                   form="area"
                   type="submit"
                   className="rounded-lg bg-[#F93B1D] px-4 py-2 text-sm font-medium leading-4 text-white hover:bg-[#DF3014]"
+                  style={{
+                    transition: 'background-color 0.2s ease-in-out',
+                  }}
                 >
                   არჩევა
                 </button>
