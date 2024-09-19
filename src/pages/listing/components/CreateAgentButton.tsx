@@ -8,7 +8,7 @@ const CreateListingButton: React.FC = () => {
   const closeModal = () => setIsModalOpen(false)
 
   return (
-    <div>
+    <>
       <Button
         type={'button'}
         backgroundColor={'#FFF'}
@@ -17,7 +17,7 @@ const CreateListingButton: React.FC = () => {
         onClick={openModal}
       />
       {isModalOpen && <CreateAgentModal closeModal={closeModal} />}
-    </div>
+    </>
   )
 }
 

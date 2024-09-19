@@ -66,7 +66,7 @@ const Filter: React.FC<{
       </div>
 
       {/* Display Selected Filters */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex max-w-3xl flex-wrap items-center gap-2">
         {/* Display selected regions */}
         {selectedRegionsDisplay.map(region => (
           <SelectedItem
