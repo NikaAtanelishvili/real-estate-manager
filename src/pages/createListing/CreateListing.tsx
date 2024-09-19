@@ -115,6 +115,10 @@ const CreateListing: React.FC = () => {
     fetchAgents()
   }, [fetchAgents])
 
+  const handleAgentCreated = () => {
+    fetchAgents() // Refetch agents to update the list
+  }
+
   useEffect(() => {
     fetchRegions()
   }, [fetchRegions])
@@ -417,7 +421,12 @@ const CreateListing: React.FC = () => {
           </div>
         </form>
       </div>
-      {isModalOpen && <CreateAgentModal closeModal={closeModal} />}
+      {isModalOpen && (
+        <CreateAgentModal
+          closeModal={closeModal}
+          onAgentCreated={handleAgentCreated}
+        />
+      )}
     </HeaderLayout>
   )
 }

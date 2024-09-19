@@ -73,6 +73,7 @@ const validationSchema = Yup.object({
 
 const CreateAgentModal: React.FC<{
   closeModal: () => void
+  onAgentCreated?: () => void
 }> = props => {
   const initialValues = useMemo(() => {
     const savedValues = localStorage.getItem('agentFormValues')
@@ -121,6 +122,9 @@ const CreateAgentModal: React.FC<{
         switch (response.status) {
           case 201: {
             props.closeModal()
+            // TO REFETCH AGENTS WHEN THE AGENT IS ADDED DURING LISTING CREATION
+            props.onAgentCreated?.()
+            handleClearForm()
             break
           }
 

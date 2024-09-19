@@ -72,30 +72,32 @@ const Select: React.FC<SelectProps> = props => {
           <OpenSvg />
         </div>
         {isOpen && (
-          <div className="absolute z-50 flex w-full flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
-            {typeof props.openModal === 'function' && (
-              <div
-                onClick={() => {
-                  setIsOpen(false)
-                  props.openModal?.()
-                }}
-                className="flex h-11 cursor-pointer items-center justify-start gap-3 border-t border-[#808A93] px-4 hover:bg-gray-200"
-              >
-                <AddSvg />
-                <p className="text-sm leading-4 text-[#021526]">
-                  დაამატე აგენტი
-                </p>
-              </div>
-            )}
-            {props.options.map(option => (
-              <div
-                key={option.id}
-                onClick={() => handleOptionSelect(option)}
-                className="flex h-11 cursor-pointer items-center justify-start border-t border-[#808A93] px-4 text-sm leading-4 text-[#021526] hover:bg-gray-200"
-              >
-                {option.name} {'surname' in option && option.surname}
-              </div>
-            ))}
+          <div className="absolute z-50 w-full pb-10">
+            <div className="flex flex-col rounded-b-md border border-t-0 border-[#808A93] bg-white">
+              {typeof props.openModal === 'function' && (
+                <div
+                  onClick={() => {
+                    setIsOpen(false)
+                    props.openModal?.()
+                  }}
+                  className="flex h-11 cursor-pointer items-center justify-start gap-3 border-t border-[#808A93] px-4 hover:bg-gray-200"
+                >
+                  <AddSvg />
+                  <p className="text-sm leading-4 text-[#021526]">
+                    დაამატე აგენტი
+                  </p>
+                </div>
+              )}
+              {props.options.map(option => (
+                <div
+                  key={option.id}
+                  onClick={() => handleOptionSelect(option)}
+                  className="flex h-11 cursor-pointer items-center justify-start border-t border-[#808A93] px-4 text-sm leading-4 text-[#021526] hover:bg-gray-200"
+                >
+                  {option.name} {'surname' in option && option.surname}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
