@@ -32,9 +32,8 @@ const Region: React.FC<RegionType> = ({
         updatedRegions = [...selectedRegions, id]
       }
       setSelectedRegions(updatedRegions) // Update the local state
-      onSelectionChange(updatedRegions) // Notify parent of the updated selection
     },
-    [selectedRegions, onSelectionChange],
+    [selectedRegions],
   )
 
   const applySelection = () => {

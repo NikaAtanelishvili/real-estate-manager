@@ -101,7 +101,7 @@ const FileInput: React.FC<FileInputProps> = props => {
       <div className="flex items-center gap-1">
         <TickSvg color={color} />
         <p style={{ color: color }} className={`text-sm leading-4`}>
-          სურათი და არ უნდა აღემატებოდეს 1mb-ის ზომაში
+          სურათი არ უნდა აღემატებოდეს 1MB-ის ზომაში
         </p>
       </div>
     </div>
