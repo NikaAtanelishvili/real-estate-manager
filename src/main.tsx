@@ -4,6 +4,7 @@ import './index.css'
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
 } from 'react-router-dom'
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
       <Route index element={<Listing />} />
       <Route path="create-listing" element={<CreateListing />} />
       <Route path=":id" element={<ListingDetails />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Route>,
   ),
 )

@@ -9,7 +9,7 @@ import {
 } from '@/assets'
 import { Card } from '@/components'
 import { HeaderLayout } from '@/layouts'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { DeleteListingModal, ListingsCarousel } from './components'
 import { useEffect, useState } from 'react'
 import { useFetchListingDetails, useFetchListings } from '@/hooks'
@@ -46,7 +46,16 @@ const ListingDetails: React.FC = () => {
 
   // Early return if there's an error
   if (error) {
-    return <p>Error: {error}</p>
+    return (
+      <>
+        <h1 className="text-xl leading-6 text-[#021526CC]">
+          ლისტინგი არ მოიძებნა
+        </h1>
+        <Link className="text-sm underline" to={'/'}>
+          მთავარ გვერდძე დაბრუნდება
+        </Link>
+      </>
+    )
   }
 
   // Early return while data is loading
