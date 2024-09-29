@@ -37,8 +37,9 @@ const Card: React.FC<CardProps> = props => {
         {/* address */}
         <div className="flex items-center gap-1">
           <LocationSvg />
-          <p className="leading-5 text-[#021526B2]">{props.city.name}</p>
-          <p className="leading-5 text-[#021526B2]">{props.address}</p>
+          <p className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap leading-5 text-[#021526B2]">
+            {props.city.name} {props.address}
+          </p>
         </div>
 
         {/* info */}
